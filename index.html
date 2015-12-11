@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>WebRTC tutorial</title>
+	<!-- http://www.webrtc.org/ -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	
+	<style> 
+	body {
+	display : inline;
+width: 100%;
+height: 100%;
+margin: 0;
+padding: 0; 
+}
+
+#monitor{
+  max-width: 100%;
+  height: 100%;
+   position:absolute;
+  bottom:0; 
+  left:0;
+  border: solid 1px black;
+  background: green;
+}
+#videoImage {
+max-width: 100%;
+height: 100%;
+  position:absolute;
+  z-index:2;
+  top:0;
+  left:0;
+  border: solid 1px black;
+  
+}
+
+#videoImage1{
+max-width: 50%;
+height: 50%;
+  position:absolute;
+  z-index:2;
+  top:0;
+  right:0;
+  border: solid 1px black;
+  
+}
+</style>
+</head>
+<body>
+
+<p id="errorMessage"></p>
+
+
+<video id="monitor"  autoplay style="visibility:hidden;"></video>
+<canvas id="videoImage" style="visibility: visible;"></canvas>
+<canvas id="videoImage1" style="visibility: visible;"></canvas>
+
+
+
+
+<script>
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+window.URL = window.URL || window.webkitURL;
+
+var camvideo = document.getElementById('monitor');
+
+	if (!navigator.getUserMedia) 
+	{
+		document.getElementById('errorMessage').innerHTML = 
+			'Sorry. <code>navigator.getUserMedia()</code> is not available.';
+	}
+	navigator.getUserMedia({video: true}, gotStream, noStream);
+
+function gotStream(stream) 
+{
+	if (window.URL) 
+	{   camvideo.src = window.URL.createObjectURL(stream);
+		} 
+	else // Opera
+	{   camvideo.src = stream;  
+		}
+
+	camvideo.onerror = function(e) 
+	{   stream.stop();   };
+
+	stream.onended = noStream;
+}
+
+function noStream(e) 
+{
+	var msg = 'No camera available.';
+	if (e.code == 1) 
+	{   msg = 'User denied access to use camera.';   }
+	document.getElementById('errorMessage').textContent = msg;
+}
+
+
+	 
+
+
+// global variables
+var video,   videoImage,  videoImage1, videoImageContext, videoImage1Context;
+
+// assign variables to HTML elements
+video = document.getElementById( 'monitor' );
+videoImage = document.getElementById( 'videoImage' );
+videoImage1 =document.getElementById( 'videoImage1' );
+videoImageContext = videoImage.getContext( '2d' );
+videoImage1Context = videoImage1.getContext( '2d' );
+// background color if no video present
+videoImageContext.fillStyle = '#005337';
+videoImage1Context.fillStyle = '#005337';
+videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );						
+videoImage1Context.fillRect( 0, 0, videoImage1.width, videoImage1.height );
+// start the loop				
+animate();
+
+function animate() 
+{
+    requestAnimationFrame( animate );
+	render();		
+}
+
+function render() 
+{	
+	if ( video.readyState === video.HAVE_ENOUGH_DATA ){
+		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height);
+		videoImage1Context.drawImage( video, 0, 0, videoImage1.width, videoImage1.height);
+}
+}
+
+function onLoad() {
+var videoWebcam, videoWebcam1;
+    "use strict";
+    videoWebcam = document.getElementById("monitor");
+	canvas1 = document.getElementById("videoImage1");
+    canvas = document.getElementById("videoImage");
+    canvas.width = window.innerWidth / 2; //au lieu de window.innerWidth /2
+    canvas.height = window.innerHeight; //initialisation du canvas
+	canvas1.width = window.innerWidth / 2; //au lieu de window.innerWidth /2
+    canvas1.height = window.innerHeight;
+   }
+
+window.onload = onLoad;
+
+</script>
+
+
+</body>
+</html>
