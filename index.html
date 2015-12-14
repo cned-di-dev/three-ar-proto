@@ -8,42 +8,34 @@
 	
 	<style> 
 	body {
-	display : inline;
-width: 100%;
-height: 100%;
-margin: 0;
-padding: 0; 
+   width: 100%;
+   height: 100%;
+   margin: 0;
+   padding: 0; 
 }
 
 #monitor{
-  max-width: 100%;
-  height: 100%;
-   position:absolute;
+  width: 100%;
+  position:absolute;
   bottom:0; 
   left:0;
   border: solid 1px black;
   background: green;
 }
 #videoImage {
-max-width: 100%;
-height: 100%;
   position:absolute;
   z-index:2;
   top:0;
   left:0;
   border: solid 1px black;
-  
 }
 
 #videoImage1{
-max-width: 50%;
-height: 50%;
   position:absolute;
   z-index:2;
   top:0;
   right:0;
-  border: solid 1px black;
-  
+  border: solid 1px black; 
 }
 </style>
 </head>
@@ -125,8 +117,8 @@ function animate()
 function render() 
 {	
 	if ( video.readyState === video.HAVE_ENOUGH_DATA ){
-		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height);
-		videoImage1Context.drawImage( video, 0, 0, videoImage1.width, videoImage1.height);
+		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height = videoImage.width*75/100);
+		videoImage1Context.drawImage( video, 0, 0, videoImage1.width, videoImage1.height= videoImage.width*75/100);
 }
 }
 
