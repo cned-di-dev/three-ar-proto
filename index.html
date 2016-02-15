@@ -1,158 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
-	<title>WebRTC tutorial</title>
-	<!-- http://www.webrtc.org/ -->
+	<title>Proto RA Cned</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-	
-	<style> 
-	
-
-
-#monitor{
-position: relative;
-z-index:1;
-max-width : 50%;
-}
-
-gauche {
-position: relative;
-width: 50%;
-height: 100%;
-
-}
-
-
-#videoImage {
-position: absolute;
-height: 100%;
-max-width:100%;
-  top: 0;
-  left: 0;
-  transform: translate(0%, 0%);
-z-index:2;
-  
-}
-
-droite {
-position: relative;
-width: 50%;
-height: 100%;
-
-}
-
-
-#videoImage1{
-position: absolute;
-height: 100%;
-max-width: 100%;
-  top: 0;
-  right: 0;
-  transform: translate(13%, 0%);
-  z-index:2;
-  
-}
-</style>
+	<link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body id="raApp">
 
 
-<video id="monitor"  autoplay style="visibility:visible;"></video>
+<video id="monitor" autoplay></video>
 <div id="gauche">
-<canvas id="videoImage" style="visibility: visible;"></canvas>
+<canvas id="videoImage"></canvas>
 </div>
 <div id="droite">
-<canvas id="videoImage1" style="visibility: visible;"></canvas>
+<canvas id="videoImage1"></canvas>
 </div>
-<script>
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-window.URL = window.URL || window.webkitURL;
 
-var camvideo = document.getElementById('monitor');
-
-	if (!navigator.getUserMedia) 
-	{
-		document.getElementById('errorMessage').innerHTML = 
-			'Sorry. <code>navigator.getUserMedia()</code> is not available.';
-	}
-	navigator.getUserMedia({video: true}, gotStream, noStream);
-
-function gotStream(stream) 
-{
-	if (window.URL) 
-	{   camvideo.src = window.URL.createObjectURL(stream);
-		} 
-	else // Opera
-	{   camvideo.src = stream;  
-		}
-
-	camvideo.onerror = function(e) 
-	{   stream.stop();   };
-
-	stream.onended = noStream;
-}
-
-function noStream(e) 
-{
-	var msg = 'No camera available.';
-	if (e.code == 1) 
-	{   msg = 'User denied access to use camera.';   }
-	document.getElementById('errorMessage').textContent = msg;
-}
-
-
-	 
-
-
-// global variables
-var video,   videoImage,  videoImage1, videoImageContext, videoImage1Context;
-
-// assign variables to HTML elements
-video = document.getElementById( 'monitor' );
-videoImage = document.getElementById( 'videoImage' );
-videoImage1 =document.getElementById( 'videoImage1' );
-videoImageContext = videoImage.getContext( '2d' );
-videoImage1Context = videoImage1.getContext( '2d' );
-// background color if no video present
-videoImageContext.fillStyle = '#005337';
-videoImage1Context.fillStyle = '#005337';
-videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );						
-videoImage1Context.fillRect( 0, 0, videoImage1.width, videoImage1.height );
-// start the loop				
-animate();
-
-function animate() 
-{
-    requestAnimationFrame( animate );
-	render();		
-}
-
-function render() 
-{	
-	if ( video.readyState === video.HAVE_ENOUGH_DATA ){
-		videoImageContext.drawImage( video, 0, 0, videoImage.width, videoImage.height = videoImage.width*75/100);
-		videoImage1Context.drawImage( video, 0, 0, videoImage1.width, videoImage1.height= videoImage.width*75/100);
-}
-}
-
-function onLoad() {
-var videoWebcam, videoWebcam1;
-    "use strict";
-    videoWebcam = document.getElementById("monitor");
-	canvas1 = document.getElementById("videoImage1");
-    canvas = document.getElementById("videoImage");
-   canvas.width = window.innerWidth / 2; //au lieu de window.innerWidth mais il me semble que ces 4 lignes servent à rien du coup.
-    canvas.height = window.innerHeight; //initialisation du canvas
-	canvas1.width = window.innerWidth / 2;
-   	//au lieu de window.innerWidth /2
-    canvas1.height = window.innerHeight;
-	
-   }
-
-window.onload = onLoad;
-
-</script>
+<script src='js/libs/awe-loader.js'></script>
+<script src="js/ra.js"></script>
 
 </body>
 </html>
