@@ -54,36 +54,34 @@ body {
     text-align: center;
     overflow: hidden;
 }
-#monitor {
-    display: none;
+iframe {
+	width: 50%;
+	height: 100%;
 }
-#droite, #gauche {
-  box-sizing: border-box;
-  height: 100%;
+#left-view {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 50%;
+	overflow: hidden;
+	margin: 0;
 }
-#gauche {
-    float: left;
-    width: 50%;
-    position: relative;
+#right-view {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+	margin: 0;
+}
+#container {
+    position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
     overflow: hidden;
     margin: 0;
-}
-#videoImage {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 100%;
-}
-#droite {
-    float: right;
-    width: 50%;
-    position: relative;
-    overflow: hidden;
-    margin: 0;
-}
-#videoImage1 {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 100%;
 }
