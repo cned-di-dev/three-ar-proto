@@ -209,7 +209,7 @@
                 this_awe.util.connect_stream_to_src(stream, video);
 
                 var event = new CustomEvent('gum_ready');
-                
+
                 window.dispatchEvent(event);
               },
               function(e) {

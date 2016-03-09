@@ -718,7 +718,7 @@ fragmentShader:"uniform vec3 color;\nuniform sampler2D map;\nuniform float opaci
 
 
 // BEGIN FILE:  CSS3dRenderer.js
-// See: https://github.com/mrdoob/three.js/blob/master/examples/js/renderers/CSS3DRenderer.js 
+// See: https://github.com/mrdoob/three.js/blob/master/examples/js/renderers/CSS3DRenderer.js
 /**
  * Based on http://www.emagix.net/academic/mscs-project/item/camera-sync-with-css3-and-webgl-threejs
  * @author mrdoob / http://mrdoob.com/
@@ -1040,7 +1040,7 @@ THREE.OBJLoader.prototype = {
 
 		var face_pattern3 = /f( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))?/;
 
-		// f vertex//normal vertex//normal vertex//normal ... 
+		// f vertex//normal vertex//normal vertex//normal ...
 
 		var face_pattern4 = /f( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))?/
 
@@ -1383,8 +1383,8 @@ THREE.OBJLoader.prototype = {
 // END FILE:  OBJLoader.js
 
 
-// BEGIN FILE:  MTLLoader.js 
-// See: https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/MTLLoader.js 
+// BEGIN FILE:  MTLLoader.js
+// See: https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/MTLLoader.js
 /**
  * Loads a Wavefront .mtl file specifying materials
  *
@@ -1823,7 +1823,7 @@ THREE.EventDispatcher.prototype.apply( THREE.MTLLoader.prototype );
 
 
 // BEGIN FILE:  OBJMTLLoader.js
-// See: https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/OBJMTLLoader.js 
+// See: https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/OBJMTLLoader.js
 /**
  * Loads a Wavefront .obj file with materials
  *
@@ -1840,7 +1840,7 @@ THREE.OBJMTLLoader.prototype = {
 	load: function ( url, mtlurl, onLoad, onProgress, onError ) {
 
 		var scope = this;
-		
+
 		var mtlLoader = new THREE.MTLLoader( url.substr( 0, url.lastIndexOf( "/" ) + 1 ) );
 		mtlLoader.load( mtlurl, function ( materials ) {
 
@@ -1970,7 +1970,7 @@ THREE.OBJMTLLoader.prototype = {
 
 		var face_pattern3 = /f( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))( +(\d+)\/(\d+)\/(\d+))?/;
 
-		// f vertex//normal vertex//normal vertex//normal ... 
+		// f vertex//normal vertex//normal vertex//normal ...
 
 		var face_pattern4 = /f( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))( +(\d+)\/\/(\d+))?/
 
