@@ -8,6 +8,7 @@
   var tracking_enabled = false, background_video, canvas, ctx, video_stream, detector, raster, param, resultMat, tmp = new Float32Array(16), pov_projection_matrix, pov_projection_matrix2;
   var settings = window.awe.settings.list();
   var container_id = settings[1].value;
+  console log(settings);
   var container = document.getElementById(container_id);
 
 
