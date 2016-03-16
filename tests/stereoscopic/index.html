@@ -63,10 +63,10 @@
 
 
     <script>
+
         //////////////////////////////////////////////////////////////////////////////////
         //		Shaders to make alpha videos (on Chrome: works on mp4 h.264)
         //////////////////////////////////////////////////////////////////////////////////
-
 
         ChromaKeyMaterial = function(url, width, height, keyColor) {
             THREE.ShaderMaterial.call(this);
@@ -226,7 +226,7 @@
         // add some debug display
         function addMesh() {
             var geometry = new THREE.PlaneBufferGeometry(1, 1);
-            movieMaterial = new ChromaKeyMaterial('videos/sintel.mp4', 400, 200, 0x000000)
+            movieMaterial = new ChromaKeyMaterial('../../videos/garcon-sm.mp4', 360, 334, 0xffffff)
             var mesh = new THREE.Mesh(geometry, movieMaterial);
 
             markerObject3D.add(mesh);
@@ -329,9 +329,9 @@
 
 
         window.addEventListener('resize', function() {
-            effect.setSize(window.innerWidth, window.innerHeight)
-            camera.aspect = window.innerWidth / window.innerHeight
-            camera.updateProjectionMatrix()
+            effect.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
         }, false)
 
 
