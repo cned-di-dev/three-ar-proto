@@ -226,7 +226,7 @@
         // add some debug display
         function addMesh() {
             var geometry = new THREE.PlaneBufferGeometry(1, 1);
-            movieMaterial = new ChromaKeyMaterial('../../videos/garcon-sm.mp4', 360, 334, 0xffffff)
+            movieMaterial = new ChromaKeyMaterial('../../videos/garcon-sm.mp4', 400, 400, 0xffffff)
             var mesh = new THREE.Mesh(geometry, movieMaterial);
 
             markerObject3D.add(mesh);
@@ -250,17 +250,22 @@
 
             // run the rendering loop
             var previousTime = performance.now()
-            requestAnimationFrame(function animate(now) {
+            var fps = 30;
 
-                requestAnimationFrame(animate);
+            function animationLoop(now) {
+                setTimeout(function() {
+                  requestAnimationFrame(animationLoop);
 
-                onRenderFcts.forEach(function(onRenderFct) {
-                    onRenderFct(now, now - previousTime)
-                })
-                render();
-                update();
-                previousTime = now;
-            })
+                  onRenderFcts.forEach(function(onRenderFct) {
+                      onRenderFct(now, now - previousTime)
+                  })
+                  render();
+                  update();
+                  previousTime = now;
+
+                }, 1000 / fps);
+            }
+            animationLoop();
 
             //////////////////////////////////////////////////////////////////////////////////
             //		Do the Augmented Reality part
@@ -302,18 +307,18 @@
             //		Process video source to find markers
             //////////////////////////////////////////////////////////////////////////////////
             // set the markerObject3D as visible
-            markerObject3D.visible = false
+            //markerObject3D.visible = false
                 // process the image source with the marker recognition
             onRenderFcts.push(function() {
                 if (detectMarkersEnabled === false) return
 
                 var domElement = videoGrabbing.domElement
                 detectMarkersStats.begin();
-                var markers = jsArucoMarker.detectMarkers(domElement)
+                var markers = jsArucoMarker.detectMarkers(domElement);
                 detectMarkersStats.end();
 
                 if (markerToObject3DEnabled === false) return
-                markerObject3D.visible = false
+                //markerObject3D.visible = false
 
                 // see if this.markerId has been found
                 markers.forEach(function(marker) {
