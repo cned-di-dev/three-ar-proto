@@ -226,7 +226,8 @@
         // add some debug display
         function addMesh() {
             var geometry = new THREE.PlaneBufferGeometry(1, 1);
-            movieMaterial = new ChromaKeyMaterial('../../videos/garcon-sm.mp4', 600, 600 , 0xffffff)
+            var videoFile = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ? 'garcon-sm.ogv':'garcon-sm.mp4';
+            movieMaterial = new ChromaKeyMaterial('../../videos/'+videoFile, 600, 600 , 0xffffff)
             var mesh = new THREE.Mesh(geometry, movieMaterial);
 
             markerObject3D.add(mesh);
@@ -275,20 +276,11 @@
             // init the marker recognition
             var jsArucoMarker = new THREEx.JsArucoMarker()
 
-            // if no specific image source is specified, take the webcam by default
-            if (location.hash === '') location.hash = '#webcam'
 
-            // init the image source grabbing
-            if (location.hash === '#video') {
-                var videoGrabbing = new THREEx.VideoGrabbing()
-                jsArucoMarker.videoScaleDown = 2
-            } else if (location.hash === '#webcam') {
-                var videoGrabbing = new THREEx.WebcamGrabbing()
-                jsArucoMarker.videoScaleDown = 2
-            } else if (location.hash === '#image') {
-                var videoGrabbing = new THREEx.ImageGrabbing()
-                jsArucoMarker.videoScaleDown = 10
-            } else console.assert(false)
+
+            var videoGrabbing = new THREEx.WebcamGrabbing()
+            jsArucoMarker.videoScaleDown = 2
+
 
             // attach the videoGrabbing.domElement to the body
             backgroundTexture = new THREEx.WebcamTexture();
@@ -363,6 +355,7 @@
 
 						translateMarker3D(markerObject3D);
             movieMaterial.update();
+            console.log(backgroundTexture);
             backgroundTexture.update();
             effect.render(scene, camera);
         }

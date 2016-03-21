@@ -76,35 +76,18 @@ THREEx.WebcamGrabbing = function(){
                 onResize()
         }, 500)
 
-        // get the media sources
-        MediaStreamTrack.getSources(function(sourceInfos) {
-                // define getUserMedia() constraints
-                var constraints = {
-                        video: true,
-                        audio: false,
-                }
-                // to mirror the video element when it isnt 'environment'
-                // domElement.style.transform   = 'scaleX(-1)'
+        var constraints = {
+                video: true
+        }
 
-                // it it finds the videoSource 'environment', modify constraints.video
-                for (var i = 0; i != sourceInfos.length; ++i) {
-                        var sourceInfo = sourceInfos[i];
-                        if(sourceInfo.kind == "video" && sourceInfo.facing == "environment") {
-                                constraints.video = {
-                                        optional: [{sourceId: sourceInfo.id}]
-                                }
-                                // not to mirror the video element when it is 'environment'
-                                // domElement.style.transform   = ''
-                        }
-                }
 
-                // try to get user media
-                navigator.getUserMedia( constraints, function(stream){
-                        domElement.src = URL.createObjectURL(stream);
-                }, function(error) {
-                        console.error("Cant getUserMedia()! due to ", error);
-                });
+        // try to get user media
+        navigator.getUserMedia( constraints, function(stream){
+                domElement.src = URL.createObjectURL(stream);
+        }, function(error) {
+                console.error("Cant getUserMedia()! due to ", error);
         });
+
 
 	this.domElement = domElement
 }
