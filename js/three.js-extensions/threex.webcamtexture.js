@@ -30,7 +30,7 @@ THREEx.WebcamTexture	= function(){
 		    // Error Callback
 		    function(err) {
 		      // Log the error to the console.
-		      alert('The following error occurred when trying to use getUserMedia: ' + err);
+		      alert('The following error occurred when trying to use getUserMedia: ' + err.name);
 		    }
 		  );
 
