@@ -226,7 +226,7 @@
         // add some debug display
         function addMesh() {
             var geometry = new THREE.PlaneBufferGeometry(1, 1);
-            movieMaterial = new ChromaKeyMaterial('../../videos/garcon-sm.mp4', 400, 400, 0xffffff)
+            movieMaterial = new ChromaKeyMaterial('../../videos/garcon-sm.mp4', 600, 600 , 0xffffff)
             var mesh = new THREE.Mesh(geometry, movieMaterial);
 
             markerObject3D.add(mesh);
@@ -250,7 +250,7 @@
 
             // run the rendering loop
             var previousTime = performance.now()
-            var fps = 30;
+            var fps = 20;
 
             function animationLoop(now) {
                 setTimeout(function() {
@@ -307,7 +307,7 @@
             //		Process video source to find markers
             //////////////////////////////////////////////////////////////////////////////////
             // set the markerObject3D as visible
-            //markerObject3D.visible = false
+            markerObject3D.visible = true;
                 // process the image source with the marker recognition
             onRenderFcts.push(function() {
                 if (detectMarkersEnabled === false) return
