@@ -166,7 +166,7 @@
         // array of functions for the rendering loop
         var onRenderFcts = [];
         var scene = new THREE.Scene()
-        var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
+        var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
         var launchBtn = document.getElementById('launchBtn');
         var backgroundTexture, backgroundMesh, movieMaterial;
         camera.position.z = 2;
@@ -181,15 +181,16 @@
         //////////////////////////////////////////////////////////////////////////////////
         //		create a markerObject3D
         //////////////////////////////////////////////////////////////////////////////////
-        var markerObject3D = new THREE.Object3D()
-        scene.add(markerObject3D)
+        var markerObject3D = new THREE.Object3D();
+        markerObject3D.translateX( 100 );
+        scene.add(markerObject3D);
 
         //////////////////////////////////////////////////////////////////////////////////
         //		add an object in the markerObject3D
         //////////////////////////////////////////////////////////////////////////////////
         var updateFcts = [];
-
-
+        var debugMode = window.location.hash === '#debug';
+        console.log(debugMode);
         //////////////////////////////////////////////////////////////////////////////////
         //		add an object and make it move					//
         //////////////////////////////////////////////////////////////////////////////////
@@ -225,9 +226,11 @@
 
         // add some debug display
         function addMesh() {
-            var geometry = new THREE.PlaneBufferGeometry(1, 1);
+            var geometry = new THREE.PlaneBufferGeometry(1,1);
             var videoFile = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ? 'garcon-sm.ogv':'garcon-sm.mp4';
-            movieMaterial = new ChromaKeyMaterial('../../videos/'+videoFile, 600, 600 , 0xffffff)
+            movieMaterial = debugMode ? new THREE.MeshBasicMaterial( { color:0x00FFFF, wireframe: true, transparent: true, overdraw:true } ) : new ChromaKeyMaterial('../../videos/'+videoFile, 400, 400 , 0xffffff)
+
+
             var mesh = new THREE.Mesh(geometry, movieMaterial);
 
             markerObject3D.add(mesh);
@@ -299,7 +302,7 @@
             //		Process video source to find markers
             //////////////////////////////////////////////////////////////////////////////////
             // set the markerObject3D as visible
-            markerObject3D.visible = true;
+            markerObject3D.visible = false;
                 // process the image source with the marker recognition
             onRenderFcts.push(function() {
                 if (detectMarkersEnabled === false) return
@@ -355,12 +358,11 @@
 
 						translateMarker3D(markerObject3D);
             movieMaterial.update();
-            console.log(backgroundTexture);
             backgroundTexture.update();
             effect.render(scene, camera);
         }
 				function translateMarker3D(marker3D) {
-						marker3D.translateX( 80 );
+            marker3D.translateX(40);
 				}
     </script>
 </body>
