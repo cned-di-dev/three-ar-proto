@@ -313,14 +313,14 @@
                 detectMarkersStats.end();
 
                 if (markerToObject3DEnabled === false) return
-                //markerObject3D.visible = false
+                markerObject3D.visible = false
 
                 // see if this.markerId has been found
                 markers.forEach(function(marker) {
                     // if( marker.id !== 265 )	return
 
                     jsArucoMarker.markerToObject3D(marker, markerObject3D)
-
+                    markerObject3D.translateX(40);
                     markerObject3D.visible = true
                 })
             });
@@ -356,7 +356,7 @@
         }
         function render() {
 
-						translateMarker3D(markerObject3D);
+						//translateMarker3D(markerObject3D);
             movieMaterial.update();
             backgroundTexture.update();
             effect.render(scene, camera);
