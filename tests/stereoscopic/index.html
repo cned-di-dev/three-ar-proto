@@ -333,7 +333,14 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
         }, false)
-
+	//Je tente de mettre la vidéo en pause en la sélectionnant et en écoutant la fin et j'appelle la fonction update afin que l'utilisateur puisse remettre en marche
+	//à moins qu'il faille faire une fonction qui dit de jouer la vidéo à nouveau ?
+		document.getElementById('video').addEventListener('ended',myHandler,false);
+			function myHandler(e) {
+			setTimeout(function(){ update(); }, 5000);
+			}
+		
+		
 
         function update() {
             if (keyboard.pressed("p")) {
