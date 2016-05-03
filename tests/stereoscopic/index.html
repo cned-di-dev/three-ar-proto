@@ -74,7 +74,7 @@
             video.loop = false;
             video.src = url;
             video.load();
-            video.play();
+
             var videoImage = document.createElement('canvas');
             if (window["webkitURL"]) document.body.appendChild(videoImage);
             videoImage.width = width;
@@ -169,6 +169,22 @@
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
         var launchBtn = document.getElementById('launchBtn');
         var backgroundTexture, backgroundMesh, movieMaterial;
+
+
+        // App status
+        var videoStatus = {
+          currentMarkerId : 0,
+          isMarkerDetected : false,
+          newMarkerDetected : false,
+          prevMarkerId : 0,
+          currentMarkersDetected : []
+        };
+        var videoSrcList = {
+          intro : "../../videos/ra_ados.mp4",
+          garcon : "../../videos/garcon-lg.mp4"
+        };
+
+
         camera.position.z = 2;
 
 
@@ -182,7 +198,7 @@
         //		create a markerObject3D
         //////////////////////////////////////////////////////////////////////////////////
         var markerObject3D = new THREE.Object3D();
-        markerObject3D.translateX( 100 );
+        markerObject3D.translateX( 40 );
         scene.add(markerObject3D);
 
         //////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +206,7 @@
         //////////////////////////////////////////////////////////////////////////////////
         var updateFcts = [];
         var debugMode = window.location.hash === '#debug';
-        console.log(debugMode);
+
         //////////////////////////////////////////////////////////////////////////////////
         //		add an object and make it move					//
         //////////////////////////////////////////////////////////////////////////////////
@@ -226,9 +242,9 @@
 
         // add some debug display
         function addMesh() {
-            var geometry = new THREE.PlaneBufferGeometry(1,1);
-            var videoFile = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ? 'garcon-sm.ogv':'garcon-sm.mp4';
-            movieMaterial = debugMode ? new THREE.MeshBasicMaterial( { color:0x00FFFF, wireframe: true, transparent: true, overdraw:true } ) : new ChromaKeyMaterial('../../videos/'+videoFile, 400, 400 , 0xffffff)
+            var geometry = new THREE.PlaneBufferGeometry(2.4,1.35); //16:9
+            console.log(videoSrcList.intro);
+            movieMaterial = debugMode ? new THREE.MeshBasicMaterial( { color:0x00FFFF, wireframe: true, transparent: true, overdraw:true } ) : new ChromaKeyMaterial(videoSrcList.intro , 1280, 720 , 0xffffff)
 
 
             var mesh = new THREE.Mesh(geometry, movieMaterial);
@@ -254,7 +270,7 @@
 
             // run the rendering loop
             var previousTime = performance.now()
-            var fps = 20;
+            var fps = 22;
 
             function animationLoop(now) {
                 setTimeout(function() {
@@ -316,13 +332,30 @@
                 markerObject3D.visible = false
 
                 // see if this.markerId has been found
-                markers.forEach(function(marker) {
-                    // if( marker.id !== 265 )	return
+                if(markers.length){
 
-                    jsArucoMarker.markerToObject3D(marker, markerObject3D)
-                    markerObject3D.translateX(40);
-                    markerObject3D.visible = true
-                })
+
+                  videoStatus.currentMarkersDetected = markers.map(function(arObj) {
+                    return arObj.id;
+                  });
+                  console.log(videoStatus.currentMarkersDetected);
+                  markers.forEach(function(marker) {
+                    onMarkerFound(marker, jsArucoMarker, markerObject3D, markers);
+                  });
+                  if(videoStatus.currentVideoEl){
+                    videoStatus.currentVideoEl.play();
+                  }
+                }
+                else {
+                  // videoStatus.currentMarkersDetected = [];
+                  // // if(videoStatus.currentVideoEl){
+                  // //   videoStatus.currentVideoEl.pause();
+                  // // }
+
+                }
+
+
+
             });
 
         }
@@ -335,15 +368,63 @@
         }, false)
 
         var firstFrame = 0,
-            videoEnded = 0;
+            videoEnded = 0,
+            firstMarker = 0;
 
-        function initEventListener(video) {
-          video.addEventListener('ended', function(){
-            onVideoEnded(video);
+        function initVideo(video) {
+          videoStatus.currentVideoEl = video;
+          videoStatus.currentVideoEl.addEventListener('ended', function(){
+            onVideoEnded(videoStatus.currentVideoEl);
           });
         }
+
+        function onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) {
+
+          // Markers :
+          //
+          // 265 -> Position marker + consignes
+          //
+          // 1001 -> vidéo mot papa
+          jsArucoMarker.markerToObject3D(markers[0], markerObject3D);
+          if( marker.id > 0){
+
+
+
+
+
+
+            markerObject3D.visible = true;
+            markerObject3D.translateX(65);
+            videoStatus.currentMarkerId = marker.id;
+            if(videoStatus.currentMarkerId !== videoStatus.prevMarkerId){
+              console.log(videoStatus.currentMarkersDetected);
+              console.log(videoStatus.currentMarkersDetected.indexOf(265) > -1, videoStatus.currentMarkersDetected.length);
+
+              if(videoStatus.currentMarkersDetected.indexOf(265) > -1 && videoStatus.currentMarkersDetected.length === 1){
+                console.log('marqueur position seul = video intro');
+
+                videoStatus.currentVideoEl.src = videoSrcList.intro;
+              }
+              else if(videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length > 1){
+                console.log('marqueur position + marqueur garçon = video garçon');
+                //markerObject3D.visible = false;
+                videoStatus.currentVideoEl.src = videoSrcList.garcon;
+                videoStatus.currentVideoEl.play();
+              }
+
+              // videoStatus.currentVideoEl.play();
+              videoStatus.prevMarkerId = videoStatus.currentMarkerId;
+            }
+
+          }
+
+
+        }
+        function updateIntroVideo(todo) {
+
+        }
         function onVideoEnded(video) {
-          video.pause;
+          video.pause();
           video.currentTime = video.duration;
           setTimeout(function(){ video.play(); }, 5000);
         }
@@ -352,46 +433,25 @@
 
             if(firstFrame === 0){
               firstFrame++;
-              initEventListener(video); // On attache l'écouter qu'une fois, en passant video comme argument de la fonction (ça nous permet d'y accéder en dehors de update() )
+              initVideo(video); // On attache l'écouteur qu'une fois, en passant video comme argument de la fonction (ça nous permet d'y accéder en dehors de update() )
+
             }
-            if (keyboard.pressed("p")) {
-                video.play();
-            }
-            if (keyboard.pressed("space")) {
-                video.pause();
-            }
-            if (keyboard.pressed("s")) // stop video
-            {
-                video.pause();
-                video.currentTime = 0;
-            }
-            if (keyboard.pressed("r")) {
-                video.currentTime = 0;
-            }
+
 						if (keyboard.pressed("i")) {
                 console.log(markerObject3D);
             }
 
-            // if((video.currentTime >= video.duration-.2) && !videoEnded){
-            //   videoEnded = 1;
-            //   onVideoEnded(video);
-            //   setTimeout(function() {
-            //     ended = 0;
-            //   }, 1000 );
-            // }
 
 
         }
+
         function render() {
 
-						//translateMarker3D(markerObject3D);
             movieMaterial.update();
             backgroundTexture.update();
             effect.render(scene, camera);
         }
-				function translateMarker3D(marker3D) {
-            marker3D.translateX(40);
-				}
+
     </script>
 </body>
 </html>
