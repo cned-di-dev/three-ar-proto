@@ -64,9 +64,39 @@
 
     <script>
 
+        if(Array.prototype.equals)
+            console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+        // attach the .equals method to Array's prototype to call it on any array
+        Array.prototype.equals = function (array) {
+            // if the other array is a falsy value, return
+            if (!array)
+                return false;
+
+            // compare lengths - can save a lot of time
+            if (this.length != array.length)
+                return false;
+
+            for (var i = 0, l=this.length; i < l; i++) {
+                // Check if we have nested arrays
+                if (this[i] instanceof Array && array[i] instanceof Array) {
+                    // recurse into the nested arrays
+                    if (!this[i].equals(array[i]))
+                        return false;
+                }
+                else if (this[i] != array[i]) {
+                    // Warning - two different object instances will never be equal: {x:20} != {x:20}
+                    return false;
+                }
+            }
+            return true;
+        }
+        // Hide method from for-in loops
+        Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+
         //////////////////////////////////////////////////////////////////////////////////
         //		Shaders to make alpha videos (on Chrome: works on mp4 h.264)
         //////////////////////////////////////////////////////////////////////////////////
+        // Warn if overriding existing method
 
         ChromaKeyMaterial = function(url, width, height, keyColor) {
             THREE.ShaderMaterial.call(this);
@@ -177,6 +207,7 @@
           isMarkerDetected : false,
           newMarkerDetected : false,
           prevMarkerId : 0,
+          bufferMarkersDetected : [],
           currentMarkersDetected : []
         };
         var videoSrcList = {
@@ -318,6 +349,7 @@
             //		Process video source to find markers
             //////////////////////////////////////////////////////////////////////////////////
             // set the markerObject3D as visible
+            //
             markerObject3D.visible = false;
                 // process the image source with the marker recognition
             onRenderFcts.push(function() {
@@ -335,10 +367,16 @@
                 if(markers.length){
 
 
-                  videoStatus.currentMarkersDetected = markers.map(function(arObj) {
+                  videoStatus.bufferMarkersDetected = markers.map(function(arObj) {
                     return arObj.id;
                   });
-                  console.log(videoStatus.currentMarkersDetected);
+
+                  if(!videoStatus.bufferMarkersDetected.equals(videoStatus.currentMarkersDetected)){
+
+                    videoStatus.currentMarkersDetected = videoStatus.bufferMarkersDetected;
+                    videoStatus.newMarkerDetected = true;
+                  }
+
                   markers.forEach(function(marker) {
                     onMarkerFound(marker, jsArucoMarker, markerObject3D, markers);
                   });
@@ -347,10 +385,7 @@
                   }
                 }
                 else {
-                  // videoStatus.currentMarkersDetected = [];
-                  // // if(videoStatus.currentVideoEl){
-                  // //   videoStatus.currentVideoEl.pause();
-                  // // }
+
 
                 }
 
@@ -388,39 +423,56 @@
           jsArucoMarker.markerToObject3D(markers[0], markerObject3D);
           if( marker.id > 0){
 
-
-
-
-
-
             markerObject3D.visible = true;
             markerObject3D.translateX(65);
             videoStatus.currentMarkerId = marker.id;
-            if(videoStatus.currentMarkerId !== videoStatus.prevMarkerId){
-              console.log(videoStatus.currentMarkersDetected);
-              console.log(videoStatus.currentMarkersDetected.indexOf(265) > -1, videoStatus.currentMarkersDetected.length);
+
+            if(videoStatus.newMarkerDetected === true){
+              videoStatus.newMarkerDetected = false;
+              // Ici, on vient de trouver un nouveau marqueur
+              //
+              // on gère les différents cas
+              //
+              // 1. le marqueur de position (265) est le seul marqueur detecté, on lance la vidéo d'intro
+              //
+              // 2. le marqueur de position est detecté + un autre marqueur (pour l'instant : 1001)
+              //
+              // 3. le marqueur de position n'est pas trouvé, mais un autre marqueur est trouvé : on fait quoi ? pour l'instant : pause
 
               if(videoStatus.currentMarkersDetected.indexOf(265) > -1 && videoStatus.currentMarkersDetected.length === 1){
-                console.log('marqueur position seul = video intro');
+                console.log('video : intro');
+                updateVideo(videoSrcList.intro);
 
-                videoStatus.currentVideoEl.src = videoSrcList.intro;
               }
-              else if(videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length > 1){
-                console.log('marqueur position + marqueur garçon = video garçon');
+              else if(videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length === 2){
                 //markerObject3D.visible = false;
-                videoStatus.currentVideoEl.src = videoSrcList.garcon;
-                videoStatus.currentVideoEl.play();
+                //videoStatus.currentVideoEl.pause();
+                console.log('video : garçon');
+                updateVideo(videoSrcList.garcon);
+
+
+              }
+              else if (videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length === 1) {
+                //videoStatus.currentVideoEl.pause();
+              }
+              else {
+                // rien à faire ?
               }
 
-              // videoStatus.currentVideoEl.play();
-              videoStatus.prevMarkerId = videoStatus.currentMarkerId;
+
             }
 
           }
 
 
         }
-        function updateIntroVideo(todo) {
+        function updateVideo(videoSrc) {
+
+          if(videoSrc !== videoStatus.currentVideoEl.src){
+            videoStatus.currentVideoEl.pause();
+            videoStatus.currentVideoEl.src = videoSrc;
+            videoStatus.currentVideoEl.play();
+          }
 
         }
         function onVideoEnded(video) {
