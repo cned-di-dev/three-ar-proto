@@ -473,7 +473,14 @@
                     updateVideo(videoSrcList.garcon);
 
 
-                } else if (videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length === 1) {
+                }  else if (videoStatus.currentMarkersDetected.indexOf(0) > -1 && videoStatus.currentMarkersDetected.length === 2) {
+                    //markerObject3D.visible = false;
+                    //videoStatus.currentVideoEl.pause();
+                    console.log('video : papa');
+                    updateVideo(videoSrcList.papa);
+				
+				}
+				else if (videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length === 1) {
                     //videoStatus.currentVideoEl.pause();
                 } else {
                     // rien à faire ?
