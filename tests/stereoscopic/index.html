@@ -462,32 +462,27 @@
                 //
                 // 3. le marqueur de position n'est pas trouvé, mais un autre marqueur est trouvé : on fait quoi ? pour l'instant : pause
 
-                if (videoStatus.currentMarkersDetected.indexOf(0) > -1 && videoStatus.currentMarkersDetected.length === 1) {
-                    console.log('video : intro');
-                    updateVideo(videoSrcList[0]);
+                if (videoStatus.currentMarkersDetected.length === 1) { // un seul marqueur trouvé
 
-                } else if (videoStatus.currentMarkersDetected.length === 2) {
-                    //markerObject3D.visible = false;
-                    //videoStatus.currentVideoEl.pause();
-                    //
+                    if(videoStatus.currentMarkersDetected.indexOf(0) > -1){ // c'est le marqueur de position
+                      console.log('video : intro');
+                      updateVideo(videoSrcList[0]);
+                    }
+                    else { // ce n'est pas le marqueur de position, on fait quoi ?
+
+                    }
+
+                }
+                else if (videoStatus.currentMarkersDetected.length === 2) {
+
                     var index = videoStatus.currentMarkersDetected.indexOf(0),
                         currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.splice(index, 1);
                     currentMarkersDetectedWithout0 = parseInt(currentMarkersDetectedWithout0);
-                    
                     console.log(videoSrcList[currentMarkersDetectedWithout0]);
                     updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
 
-
-                }  else if (videoStatus.currentMarkersDetected.indexOf(0) > -1 && videoStatus.currentMarkersDetected.length === 2) {
-                    //markerObject3D.visible = false;
-                    //videoStatus.currentVideoEl.pause();
-                    console.log('video : papa');
-                    updateVideo(videoSrcList.papa);
-
-				}
-				else if (videoStatus.currentMarkersDetected.indexOf(1001) > -1 && videoStatus.currentMarkersDetected.length === 1) {
-                    //videoStatus.currentVideoEl.pause();
-                } else {
+                }
+				        else {
                     // rien à faire ?
                 }
 
