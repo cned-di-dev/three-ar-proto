@@ -197,13 +197,14 @@
         };
         var videoSrcList = [
           "../../videos/intro-lg.mp4",
-          "../../videos/garcon-lg.mp4",
+		  "../../videos/papa-lg.mp4",
+		  "../../videos/maman-lg.mp4",
           "../../videos/a-lent-lg.mp4",
           "../../videos/a-rapide-lg.mp4",
           "../../videos/m-lent-lg.mp4",
-          "../../videos/m-rapide-lg.mp4",
-          "../../videos/maman-lg.mp4",
-          "../../videos/papa-lg.mp4"
+          "../../videos/m-rapide-lg.mp4"
+          
+          
         ];
 
 
@@ -402,6 +403,7 @@
                     if (videoStatus.currentVideoEl) {
                         videoStatus.currentVideoEl.play();
                     }
+					
                 }
 
 
@@ -475,6 +477,8 @@
                         currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.filter(function(i) {	return i !== 0});
                     updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
                 }
+				
+				
 				        else {
                     // rien à faire ?
                 }
