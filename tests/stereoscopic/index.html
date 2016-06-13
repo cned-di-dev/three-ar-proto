@@ -203,8 +203,8 @@
           "../../videos/a-rapide-lg.mp4",
           "../../videos/m-lent-lg.mp4",
           "../../videos/m-rapide-lg.mp4"
-          
-          
+
+
         ];
 
 
@@ -333,7 +333,7 @@
             //
             backgroundTexture = new THREEx.WebcamTexture();
             backgroundMesh = new THREE.Mesh(
-					
+
                 new THREE.PlaneBufferGeometry(2, 1.5, 0),
                 new THREE.MeshBasicMaterial({
                     map: backgroundTexture.texture
@@ -403,7 +403,13 @@
                     if (videoStatus.currentVideoEl) {
                         videoStatus.currentVideoEl.play();
                     }
-					
+
+                }
+                else {
+
+                  if (videoStatus.currentVideoEl) {
+                      videoStatus.currentVideoEl.pause();
+                  }
                 }
 
 
@@ -477,11 +483,9 @@
                         currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.filter(function(i) {	return i !== 0});
                     updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
                 }
-				
-				
-				        else {
-                    // rien à faire ?
-                }
+
+
+
             }
         }
 
@@ -503,7 +507,7 @@
             jsArucoMarker.markerToObject3D(markers[0], markerObject3D);
             markerObject3D.visible = true;
             markerObject3D.translateX(125);
-			markerObject3D.translateY(-10);
+		      	markerObject3D.translateY(-10);
             videoStatus.currentMarkerId = marker.id;
 
 
@@ -533,11 +537,14 @@
         // param video = élément video
         //
 
-        function onVideoEnded(video) {
-            video.pause();
-            video.currentTime = video.duration;
+        function onVideoEnded() {
+            console.log('video ended, pause');
+            videoStatus.currentVideoEl.pause();
+
             setTimeout(function() {
-                video.play();
+                console.log('video ended, replay');
+                videoStatus.currentVideoEl.currentTime = 0;
+                videoStatus.currentVideoEl.play();
             }, 5000);
         }
 
