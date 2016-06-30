@@ -2,579 +2,571 @@
 <html>
 
 <head>
-    <title>Proto RA Cned</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-    <link rel="stylesheet" href="../../css/styles.css">
+  <title>Proto RA Cned</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+  <link rel="stylesheet" href="../../css/styles.css">
 
-    <!-- DEPENDENCIES -->
-    <!-- include MDL -->
+  <!-- DEPENDENCIES -->
+  <!-- include MDL -->
 
 
-    <!-- include three.js -->
-    <script src='../../js/three.js/build/three.js'></script>
-    <script src='../../js/three.js/build/three.stereoscopic.js'></script>
-    <script src='../../js/three.js/build/three.videoTexture.js'></script>
-    <script src='../../js/three.js/build/three.keyboardState.js'></script>
-    <script src='../../js/three.js/examples/js/libs/stats.min.js'></script>
+  <!-- include three.js -->
+  <script src='../../js/three.js/build/three.js'></script>
+  <script src='../../js/three.js/build/three.stereoscopic.js'></script>
+  <script src='../../js/three.js/build/three.videoTexture.js'></script>
+  <script src='../../js/three.js/build/three.keyboardState.js'></script>
+  <script src='../../js/three.js/examples/js/libs/stats.min.js'></script>
 
-    <!-- include js-aruco -->
-    <script src='../../js/js-aruco/svd.js'></script>
-    <script src='../../js/js-aruco/posit1-patched.js'></script>
-    <script src='../../js/js-aruco/cv.js'></script>
-    <script src='../../js/js-aruco/aruco.js'></script>
+  <!-- include js-aruco -->
+  <script src='../../js/js-aruco/svd.js'></script>
+  <script src='../../js/js-aruco/posit1-patched.js'></script>
+  <script src='../../js/js-aruco/cv.js'></script>
+  <script src='../../js/js-aruco/aruco.js'></script>
 
-    <!-- include some extensions -->
-    <script src='../../js/three.js-extensions/threex.webcamgrabbing.js'></script>
-    <script src='../../js/three.js-extensions/threex.imagegrabbing.js'></script>
-    <script src='../../js/three.js-extensions/threex.videograbbing.js'></script>
-    <script src='../../js/three.js-extensions/threex.jsarucomarker.js'></script>
-    <script src='../../js/three.js-extensions/threex.webcamtexture.js'></script>
+  <!-- include some extensions -->
+  <script src='../../js/three.js-extensions/threex.webcamgrabbing.js'></script>
+  <script src='../../js/three.js-extensions/threex.imagegrabbing.js'></script>
+  <script src='../../js/three.js-extensions/threex.videograbbing.js'></script>
+  <script src='../../js/three.js-extensions/threex.jsarucomarker.js'></script>
+  <script src='../../js/three.js-extensions/threex.webcamtexture.js'></script>
 </head>
 
 <body id="AppRaCned">
 
 
-    <button id="launchBtn" class="btn">Lancement proto</button>
+  <button id="launchBtn" class="btn">Lancement proto</button>
 
 
-    <script id="vertexShader" type="x-shader/x-vertex">
-        varying vec2 vUv; void main() { vUv = uv; vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); gl_Position = projectionMatrix * mvPosition; }
-    </script>
+  <script id="vertexShader" type="x-shader/x-vertex">
+    varying vec2 vUv; void main() { vUv = uv; vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); gl_Position = projectionMatrix * mvPosition; }
+  </script>
 
-    <script id="fragmentShader" type="x-shader/x-fragment">
-        uniform sampler2D texture; uniform vec3 color; varying vec2 vUv; void main() { vec3 tColor = texture2D( texture, vUv ).rgb; float a = (length(tColor - color) - 0.5) * 7.0; gl_FragColor = vec4(tColor, a); }
-    </script>
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    uniform sampler2D texture; uniform vec3 color; varying vec2 vUv; void main() { vec3 tColor = texture2D( texture, vUv ).rgb; float a = (length(tColor - color) - 0.5) * 7.0; gl_FragColor = vec4(tColor, a); }
+  </script>
 
 
-    <script>
-        if (Array.prototype.equals)
-            console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
-        // attach the .equals method to Array's prototype to call it on any array
-        Array.prototype.equals = function(array) {
-                // if the other array is a falsy value, return
-                if (!array)
-                    return false;
+  <script>
+    if (Array.prototype.equals)
+      console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+    // attach the .equals method to Array's prototype to call it on any array
+    Array.prototype.equals = function (array) {
+        // if the other array is a falsy value, return
+        if (!array)
+          return false;
 
-                // compare lengths - can save a lot of time
-                if (this.length != array.length)
-                    return false;
+        // compare lengths - can save a lot of time
+        if (this.length != array.length)
+          return false;
 
-                for (var i = 0, l = this.length; i < l; i++) {
-                    // Check if we have nested arrays
-                    if (this[i] instanceof Array && array[i] instanceof Array) {
-                        // recurse into the nested arrays
-                        if (!this[i].equals(array[i]))
-                            return false;
-                    } else if (this[i] != array[i]) {
-                        // Warning - two different object instances will never be equal: {x:20} != {x:20}
-                        return false;
-                    }
-                }
-                return true;
-            }
-            // Hide method from for-in loops
-        Object.defineProperty(Array.prototype, "equals", {
-            enumerable: false
-        });
-
-        //////////////////////////////////////////////////////////////////////////////////
-        //		Shaders to make alpha videos (on Chrome: works on mp4 h.264)
-        //////////////////////////////////////////////////////////////////////////////////
-        // Warn if overriding existing method
-
-        ChromaKeyMaterial = function(url, width, height, keyColor) {
-            THREE.ShaderMaterial.call(this);
-            video = document.createElement('video');
-            video.loop = false;
-            video.src = url;
-            video.load();
-
-            var videoImage = document.createElement('canvas');
-            if (window["webkitURL"]) document.body.appendChild(videoImage);
-            videoImage.width = width;
-            videoImage.height = height;
-            videoImage.style.display = 'none';
-            var keyColorObject = new THREE.Color(keyColor);
-            var videoImageContext = videoImage.getContext('2d');
-            // background color if no video present
-            videoImageContext.fillStyle = '#' + keyColorObject.getHexString();
-            videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
-            var videoTexture = new THREE.Texture(videoImage);
-            videoTexture.minFilter = THREE.LinearFilter;
-            videoTexture.magFilter = THREE.LinearFilter;
-            this.update = function() {
-                if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                    videoImageContext.drawImage(video, 0, 0);
-                    if (videoTexture) {
-                        videoTexture.needsUpdate = true;
-                    }
-                }
-            }
-            this.setValues({
-                uniforms: {
-                    texture: {
-                        type: "t",
-                        value: videoTexture
-                    },
-                    color: {
-                        type: "c",
-                        value: keyColorObject
-                    }
-                },
-                vertexShader: document.getElementById('vertexShader').textContent,
-                fragmentShader: document.getElementById('fragmentShader').textContent,
-                transparent: true
-            });
+        for (var i = 0, l = this.length; i < l; i++) {
+          // Check if we have nested arrays
+          if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+              return false;
+          } else if (this[i] != array[i]) {
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;
+          }
         }
-        ChromaKeyMaterial.prototype = Object.create(THREE.ShaderMaterial.prototype);
+        return true;
+      }
+      // Hide method from for-in loops
+    Object.defineProperty(Array.prototype, "equals", {
+      enumerable: false
+    });
 
+    //////////////////////////////////////////////////////////////////////////////////
+    //		Shaders to make alpha videos (on Chrome: works on mp4 h.264)
+    //////////////////////////////////////////////////////////////////////////////////
+    // Warn if overriding existing method
 
-        //////////////////////////////////////////////////////////////////////////////////
-        //		Test if the browser support WebGL and getUserMedia
-        //////////////////////////////////////////////////////////////////////////////////
+    ChromaKeyMaterial = function (url, width, height, keyColor) {
+      THREE.ShaderMaterial.call(this);
+      video = document.createElement('video');
+      video.loop = false;
+      video.src = url;
+      video.load();
 
-
-
-
-        //////////////////////////////////////////////////////////////////////////////////
-        //		enabled/disable various parts
-        //////////////////////////////////////////////////////////////////////////////////
-        var detectMarkersEnabled = true
-        var markerToObject3DEnabled = true
-        var webglRenderEnabled = true
-        var keyboard = new THREEx.KeyboardState();
-
-
-        //////////////////////////////////////////////////////////////////////////////////
-        //		init Stats for detectMarkers
-        //////////////////////////////////////////////////////////////////////////////////
-        var detectMarkersStats = new Stats();
-        detectMarkersStats.setMode(1);
-        document.body.appendChild(detectMarkersStats.domElement);
-        detectMarkersStats.domElement.style.position = 'absolute'
-        detectMarkersStats.domElement.style.bottom = '0px'
-        detectMarkersStats.domElement.style.right = '0px'
-
-        var renderStats = new Stats();
-        renderStats.setMode(0);
-        document.body.appendChild(renderStats.domElement);
-        renderStats.domElement.style.position = 'absolute'
-        renderStats.domElement.style.bottom = '0px'
-        renderStats.domElement.style.left = '0px'
-
-
-        //////////////////////////////////////////////////////////////////////////////////
-        //		Init
-        //////////////////////////////////////////////////////////////////////////////////
-
-        // init renderer
-        var renderer = new THREE.WebGLRenderer({
-            antialias: true
-        });
-        effect = new THREE.StereoEffect(renderer);
-        effect.separation = 0;
-        effect.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // renderer.eyeSeparation = 10;
-        // array of functions for the rendering loop
-        var onRenderFcts = [];
-        var scene = new THREE.Scene()
-        var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
-        var launchBtn = document.getElementById('launchBtn');
-        var backgroundTexture, backgroundMesh, movieMaterial;
-
-
-        // App status
-        var videoStatus = {
-            currentMarkerId: 0,
-            isMarkerDetected: false,
-            newMarkerDetected: false,
-            prevMarkerId: 0,
-            bufferMarkersDetected: [],
-            currentMarkersDetected: []
-        };
-        var videoSrcList = [
-          "../../videos/intro-lg.mp4",
-		  "../../videos/papa-lg.mp4",
-		  "../../videos/maman-lg.mp4",
-          "../../videos/a-lent-lg.mp4",
-          "../../videos/a-rapide-lg.mp4",
-          "../../videos/m-lent-lg.mp4",
-          "../../videos/m-rapide-lg.mp4"
-
-
-        ];
-
-
-        camera.position.z = 2;
-
-
-        // launch Three.js app + webcam stream + video stream on click
-        launchBtn.onclick = function() {
-            initThree();
+      var videoImage = document.createElement('canvas');
+      if (window["webkitURL"]) document.body.appendChild(videoImage);
+      videoImage.width = width;
+      videoImage.height = height;
+      videoImage.style.display = 'none';
+      var keyColorObject = new THREE.Color(keyColor);
+      var videoImageContext = videoImage.getContext('2d');
+      // background color if no video present
+      videoImageContext.fillStyle = '#' + keyColorObject.getHexString();
+      videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
+      var videoTexture = new THREE.Texture(videoImage);
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      this.update = function () {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          videoImageContext.drawImage(video, 0, 0);
+          if (videoTexture) {
+            videoTexture.needsUpdate = true;
+          }
         }
+      }
+      this.setValues({
+        uniforms: {
+          texture: {
+            type: "t",
+            value: videoTexture
+          },
+          color: {
+            type: "c",
+            value: keyColorObject
+          }
+        },
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
+        transparent: true
+      });
+    }
+    ChromaKeyMaterial.prototype = Object.create(THREE.ShaderMaterial.prototype);
 
+    //////////////////////////////////////////////////////////////////////////////////
+    //		Test if the browser support WebGL and getUserMedia
+    //////////////////////////////////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////////////////////////////////
-        //		create a markerObject3D
-        //////////////////////////////////////////////////////////////////////////////////
-        var markerObject3D = new THREE.Object3D();
-        markerObject3D.translateX(40);
-        scene.add(markerObject3D);
+    //////////////////////////////////////////////////////////////////////////////////
+    //		enabled/disable various parts
+    //////////////////////////////////////////////////////////////////////////////////
+    var detectMarkersEnabled = true
+    var markerToObject3DEnabled = true
+    var webglRenderEnabled = true
+    var keyboard = new THREEx.KeyboardState();
 
-        //////////////////////////////////////////////////////////////////////////////////
-        //		add an object in the markerObject3D
-        //////////////////////////////////////////////////////////////////////////////////
-        var updateFcts = [];
-        var debugMode = window.location.hash === '#debug';
+    //////////////////////////////////////////////////////////////////////////////////
+    //		init Stats for detectMarkers
+    //////////////////////////////////////////////////////////////////////////////////
+    // var detectMarkersStats = new Stats();
+    // detectMarkersStats.setMode(1);
+    // document.body.appendChild(detectMarkersStats.domElement);
+    // detectMarkersStats.domElement.style.position = 'absolute'
+    // detectMarkersStats.domElement.style.bottom = '0px'
+    // detectMarkersStats.domElement.style.right = '0px'
+    //
+    // var renderStats = new Stats();
+    // renderStats.setMode(0);
+    // document.body.appendChild(renderStats.domElement);
+    // renderStats.domElement.style.position = 'absolute'
+    // renderStats.domElement.style.bottom = '0px'
+    // renderStats.domElement.style.left = '0px'
 
-        //////////////////////////////////////////////////////////////////////////////////
-        //		add an object and make it move					//
-        //////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+    //		Init
+    //////////////////////////////////////////////////////////////////////////////////
 
-        // find out which file formats i can read
+    // init renderer
+    var renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+    effect = new THREE.StereoEffect(renderer);
+    effect.separation = 0;
+    effect.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
+    // renderer.eyeSeparation = 10;
+    // array of functions for the rendering loop
+    var onRenderFcts = [];
+    var scene = new THREE.Scene()
+    var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
+    var launchBtn = document.getElementById('launchBtn');
+    var backgroundTexture, backgroundMesh, movieMaterial;
 
+    // App status
+    var videoStatus = {
+      currentMarkerId: 0,
+      isMarkerDetected: false,
+      newMarkerDetected: false,
+      prevMarkerId: 0,
+      bufferMarkersDetected: [],
+      currentMarkersDetected: []
+    };
+    var videoSrcList = [
+      "../../videos/intro-lg.mp4",
+      "../../videos/papa-lg.mp4",
+      "../../videos/maman-lg.mp4",
+      "../../videos/a-lent-lg.mp4",
+      "../../videos/a-rapide-lg.mp4",
+      "../../videos/m-lent-lg.mp4",
+      "../../videos/m-rapide-lg.mp4"
 
+    ];
 
-        function initMedia() {
-            // TODO backport those 2 in Detector.js
-            var hasGetUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia) ? true : false
-            var hasMediaStreamTrackSources = MediaStreamTrack.getSources ? true : false
-            var hasWebGL = (function() {
-                try {
-                    var canvas = document.createElement('canvas');
-                    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-                } catch (e) {
-                    return false;
-                }
-            })()
+    camera.position.z = 2;
 
-            if (hasWebGL === false) {
-                alert('your browser doesn\'t support navigator.getUserMedia()')
-            }
-            if (hasMediaStreamTrackSources === false) {
-                alert('your browser doesn\'t support MediaStreamTrack.getSources()')
-            }
-            if (hasGetUserMedia === false) {
-                alert('your browser doesn\'t support navigator.getUserMedia()')
-            }
+    // launch Three.js app + webcam stream + video stream on click
+    launchBtn.onclick = function () {
+      initThree();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //		create a markerObject3D
+    //////////////////////////////////////////////////////////////////////////////////
+    var markerObject3D = new THREE.Object3D();
+    scene.add(markerObject3D);
+
+    var markerObject3DDebug = new THREE.Object3D();
+    scene.add(markerObject3DDebug);
+    
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //		add an object in the markerObject3D
+    //////////////////////////////////////////////////////////////////////////////////
+    var updateFcts = [];
+    var debugMode = window.location.hash === '#debug';
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //		add an object and make it move					//
+    //////////////////////////////////////////////////////////////////////////////////
+
+    // find out which file formats i can read
+
+    function initMedia() {
+      // TODO backport those 2 in Detector.js
+      var hasGetUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia) ? true : false
+      var hasMediaStreamTrackSources = MediaStreamTrack.getSources ? true : false
+      var hasWebGL = (function () {
+        try {
+          var canvas = document.createElement('canvas');
+          return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+        } catch (e) {
+          return false;
         }
+      })()
 
-        // add some debug display
-        function addMesh() {
-            var geometry = new THREE.PlaneBufferGeometry(5.5, 3.375); //16:9
-            movieMaterial = debugMode ? new THREE.MeshBasicMaterial({
-                color: 0x00FFFF,
-                wireframe: true,
-                transparent: true,
-                overdraw: true
-            }) : new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
+      if (hasWebGL === false) {
+        alert('your browser doesn\'t support navigator.getUserMedia()')
+      }
+      if (hasMediaStreamTrackSources === false) {
+        alert('your browser doesn\'t support MediaStreamTrack.getSources()')
+      }
+      if (hasGetUserMedia === false) {
+        alert('your browser doesn\'t support navigator.getUserMedia()')
+      }
+    }
 
+    // add some debug display
+    function addMesh() {
+      var geometry = new THREE.PlaneBufferGeometry(5.5, 3.375); //16:9
+      movieMaterial = debugMode ? new THREE.MeshBasicMaterial({
+        color: 0x00FFFF,
+        wireframe: true,
+        transparent: true,
+        overdraw: true
+      }) : new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
 
-            var mesh = new THREE.Mesh(geometry, movieMaterial);
+      var mesh = new THREE.Mesh(geometry, movieMaterial);
 
-            markerObject3D.add(mesh);
+      markerObject3D.add(mesh);
 
-            // var mesh = new THREE.AxisHelper
-            // markerObject3D.add( mesh );
+      // var mesh = new THREE.AxisHelper
+      // markerObject3D.add( mesh );
+
+      if(debugMode){
+        var geometryDebugObj = new THREE.PlaneBufferGeometry(1,1); //16:9
+        var movieMaterialDebugObj = new THREE.MeshBasicMaterial({
+          color: 0x00FFFF,
+          wireframe: true,
+          transparent: true,
+          overdraw: true
+        })
+
+        var meshDebugObj = new THREE.Mesh(geometryDebugObj, movieMaterialDebugObj);
+
+        markerObject3DDebug.add(meshDebugObj);
+      }
+
+    }
+
+    function initThree() {
+      document.body.className = 'initialized';
+      //initMedia();
+      addMesh();
+      // render the scene
+      onRenderFcts.push(function () {
+        if (webglRenderEnabled === true) {
+          effect.render(scene, camera);
         }
+      })
 
-        function initThree() {
-            document.body.className = 'initialized';
-            //initMedia();
-            addMesh();
-            // render the scene
-            onRenderFcts.push(function() {
-                renderStats.begin();
-                if (webglRenderEnabled === true) {
-                    effect.render(scene, camera);
-                }
-                renderStats.end();
-            })
+      // run the rendering loop
+      var previousTime = performance.now()
+      var fps = 22;
 
-            // run the rendering loop
-            var previousTime = performance.now()
-            var fps = 22;
+      function animationLoop(now) {
+        setTimeout(function () {
+          requestAnimationFrame(animationLoop);
 
-            function animationLoop(now) {
-                setTimeout(function() {
-                    requestAnimationFrame(animationLoop);
+          onRenderFcts.forEach(function (onRenderFct) {
+            onRenderFct(now, now - previousTime)
+          })
+          render();
+          update();
+          previousTime = now;
 
-                    onRenderFcts.forEach(function(onRenderFct) {
-                        onRenderFct(now, now - previousTime)
-                    })
-                    render();
-                    update();
-                    previousTime = now;
+        }, 1000 / fps);
+      }
+      animationLoop();
 
-                }, 1000 / fps);
-            }
-            animationLoop();
+      //////////////////////////////////////////////////////////////////////////////////
+      //		Do the Augmented Reality part
+      //////////////////////////////////////////////////////////////////////////////////
 
-            //////////////////////////////////////////////////////////////////////////////////
-            //		Do the Augmented Reality part
-            //////////////////////////////////////////////////////////////////////////////////
+      // init the marker recognition
+      var jsArucoMarker = new THREEx.JsArucoMarker()
 
+      var videoGrabbing = new THREEx.WebcamGrabbing()
+      jsArucoMarker.videoScaleDown = 2
 
-            // init the marker recognition
-            var jsArucoMarker = new THREEx.JsArucoMarker()
+      //
+      // attach the videoGrabbing.domElement to the body
+      //
+      backgroundTexture = new THREEx.WebcamTexture();
+      backgroundMesh = new THREE.Mesh(
 
+        new THREE.PlaneBufferGeometry(2, 1.5, 0),
+        new THREE.MeshBasicMaterial({
+          map: backgroundTexture.texture
+        }));
+      backgroundTexture.texture.minFilter = THREE.LinearFilter
+      backgroundMesh.material.depthTest = false;
+      backgroundMesh.material.depthWrite = false;
+      // Create your background scene
+      scene.add(backgroundMesh);
 
+      //
+      ///
+      ///////////////////////////////////////////////////////////////////////////////////
+      //		Process video source to find markers
+      //////////////////////////////////////////////////////////////////////////////////
+      // set the markerObject3D as visible
+      //
+      //
+      markerObject3D.visible = false;
+      if(debugMode){
+        markerObject3DDebug.visible = false;
+      }
+      // process the image source with the marker recognition
+      onRenderFcts.push(function () {
+        if (detectMarkersEnabled === false) return
 
-            var videoGrabbing = new THREEx.WebcamGrabbing()
-            jsArucoMarker.videoScaleDown = 2
+        var domElement = videoGrabbing.domElement
+        var markers = jsArucoMarker.detectMarkers(domElement);
 
-
-            //
-            // attach the videoGrabbing.domElement to the body
-            //
-            backgroundTexture = new THREEx.WebcamTexture();
-            backgroundMesh = new THREE.Mesh(
-
-                new THREE.PlaneBufferGeometry(2, 1.5, 0),
-                new THREE.MeshBasicMaterial({
-                    map: backgroundTexture.texture
-                }));
-            backgroundTexture.texture.minFilter = THREE.LinearFilter
-            backgroundMesh.material.depthTest = false;
-            backgroundMesh.material.depthWrite = false;
-            // Create your background scene
-            scene.add(backgroundMesh);
-
-            //
-            ///
-            ///////////////////////////////////////////////////////////////////////////////////
-            //		Process video source to find markers
-            //////////////////////////////////////////////////////////////////////////////////
-            // set the markerObject3D as visible
-            //
-            //
-            markerObject3D.visible = false;
-            // process the image source with the marker recognition
-            onRenderFcts.push(function() {
-                if (detectMarkersEnabled === false) return
-
-                var domElement = videoGrabbing.domElement
-                detectMarkersStats.begin();
-                var markers = jsArucoMarker.detectMarkers(domElement);
-                detectMarkersStats.end();
-
-                if (markerToObject3DEnabled === false) return
-                markerObject3D.visible = false
-
-
-                if (markers.length) {
-
-                    //
-                    //
-                    //   marqueurs trouvés !!
-                    //
-                    //
-                    //
-
-                    //
-                    // on met à jour à chaque frame notre tableau temporaire (buffer) de marqueurs trouvés
-                    //
-                    videoStatus.bufferMarkersDetected = markers.map(function(arObj) {
-                        return arObj.id;
-                    });
-
-                    //
-                    // si notre tableau temporaire (mis à jour à chaque frame) de marqueurs
-                    // est différent de notre tableau "fixe" (seulement mis à jour quand un nouveau marqueur est ajouté / enlevé)
-                    // alors on met à jour ce tableau
-                    //
-                    // et on met à jour une variable signalant ce changement (videoStatus.newMarkerDetected)
-                    //
-                    if (!videoStatus.bufferMarkersDetected.equals(videoStatus.currentMarkersDetected)) {
-                        videoStatus.currentMarkersDetected = videoStatus.bufferMarkersDetected;
-                        videoStatus.newMarkerDetected = true;
-
-                        // cette fonction va nous servir à controler le changement de vidéo
-                        onMarkersUpdated();
-                    }
-
-                    markers.forEach(function(marker) {
-                        onMarkerFound(marker, jsArucoMarker, markerObject3D, markers);
-                    });
-                    if (videoStatus.currentVideoEl) {
-                        videoStatus.currentVideoEl.play();
-                    }
-
-                }
-                else {
-
-                  if (videoStatus.currentVideoEl) {
-                      videoStatus.currentVideoEl.pause();
-                  }
-                }
-
-
-
-
-            });
-
+        if (markerToObject3DEnabled === false) return
+        markerObject3D.visible = false
+        if(debugMode){
+          markerObject3DDebug.visible = false
         }
+        if (markers.length) {
 
-        //
-        //
-        // Si la fenêtre est redimensionnée, on met à jour la projection
-        //
-        //
-        window.addEventListener('resize', function() {
-            effect.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        }, false)
+          //
+          //
+          //   marqueurs trouvés !!
+          //
+          //
+          //
 
-        var firstFrame = 0,
-            videoEnded = 0,
-            firstMarker = 0;
+          //
+          // on met à jour à chaque frame notre tableau temporaire (buffer) de marqueurs trouvés
+          //
+          videoStatus.bufferMarkersDetected = markers.map(function (arObj) {
+            return arObj.id;
+          });
 
+          //
+          // si notre tableau temporaire (mis à jour à chaque frame) de marqueurs
+          // est différent de notre tableau "fixe" (seulement mis à jour quand un nouveau marqueur est ajouté / enlevé)
+          // alors on met à jour ce tableau
+          //
+          // et on met à jour une variable signalant ce changement (videoStatus.newMarkerDetected)
+          //
+          if (!videoStatus.bufferMarkersDetected.equals(videoStatus.currentMarkersDetected)) {
+            videoStatus.currentMarkersDetected = videoStatus.bufferMarkersDetected;
+            videoStatus.newMarkerDetected = true;
 
-        //
-        //
-        // onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) : fonction appelée à tous les frames
-        //
-        // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
-        //
-        //
-        function initVideo(video) {
-            videoStatus.currentVideoEl = video;
-            videoStatus.currentVideoEl.addEventListener('ended', function() {
-                onVideoEnded(videoStatus.currentVideoEl);
-            });
-        }
+            // cette fonction va nous servir à controler le changement de vidéo
+            onMarkersUpdated();
+          }
 
-        //
-        //
-        // onMarkersUpdated() : fonction appelée uniquement en cas de changement dans les marqueurs détectés (ajout, suppression)
-        //
-        // utilisée pour gérer les changements de source vidéo / pause, etc.
-        //
-        //
-        //
-        function onMarkersUpdated() {
-            if (videoStatus.newMarkerDetected === true) {
-                videoStatus.newMarkerDetected = false;
-                // Ici, on vient de trouver un nouveau marqueur
-                //
-                // on gère les différents cas
-                //
-                // 1. le marqueur de position (265) est le seul marqueur detecté, on lance la vidéo d'intro
-                //
-                // 2. le marqueur de position est detecté + un autre marqueur (pour l'instant : 1001)
-                //
-                // 3. le marqueur de position n'est pas trouvé, mais un autre marqueur est trouvé : on fait quoi ? pour l'instant : pause
-                //console.log(videoStatus.currentMarkersDetected, videoStatus.currentMarkersDetected.length);
-                if (videoStatus.currentMarkersDetected.length === 1) { // un seul marqueur trouvé
-                    if(videoStatus.currentMarkersDetected.indexOf(0) > -1){ // c'est le marqueur de position
-                      updateVideo(videoSrcList[0]);
-                    }
-                    else { // ce n'est pas le marqueur de position, on fait quoi ?
+          markers.forEach(function (marker) {
+            onMarkerFound(marker, jsArucoMarker, markerObject3D, markers);
+          });
+          if (videoStatus.currentVideoEl) {
+            videoStatus.currentVideoEl.play();
+          }
 
-                    }
-                }
-                else if (videoStatus.currentMarkersDetected.length === 2) {
-                    var index = videoStatus.currentMarkersDetected.indexOf(0),
-                        currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.filter(function(i) {	return i !== 0});
-                    updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
-                }
+        } else {
 
-
-
-            }
-        }
-
-
-        //
-        //
-        // onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) : fonction appelée à tous les frames
-        //
-        // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
-        //
-        //
-        function onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) {
-
-            // Markers :
-            //
-            // 265 -> Position marker + consignes
-            //
-            // 1001 -> vidéo mot papa
-            jsArucoMarker.markerToObject3D(markers[0], markerObject3D);
-            markerObject3D.visible = true;
-
-            markerObject3D.translateX(130);
-	      		markerObject3D.translateY(-30);
-
-            videoStatus.currentMarkerId = marker.id;
-
-
-        }
-
-        //
-        // updateVideo (videoSrc) = met à jour la source le l'élément vidéo projeté
-        //
-        // param videoSrc = URL (string)
-        //
-
-        function updateVideo(videoSrc) {
-
-            // on ne met à jour que si la nouvelle source est différente de l'ancienne
-
-            if (videoSrc !== videoStatus.currentVideoEl.src) {
-                videoStatus.currentVideoEl.pause();
-                videoStatus.currentVideoEl.src = videoSrc;
-                videoStatus.currentVideoEl.play();
-            }
-
-        }
-
-        //
-        // onVideoEnded (video) = est déclenchée quand la video projetée a fini de jouer
-        //
-        // param video = élément video
-        //
-
-        function onVideoEnded() {
-            console.log('video ended, pause');
+          if (videoStatus.currentVideoEl) {
             videoStatus.currentVideoEl.pause();
-
-            setTimeout(function() {
-                console.log('video ended, replay');
-                videoStatus.currentVideoEl.currentTime = 0;
-                videoStatus.currentVideoEl.play();
-            }, 5000);
+          }
         }
 
-        function update() {
+      });
 
-            if (firstFrame === 0) {
-                // On attache l'écouteur qu'une fois, en passant video comme argument de la fonction (ça nous permet d'y accéder en dehors de update() )
-                firstFrame++;
-                initVideo(video);
+    }
 
-            }
-            //
-            // Si besoin, on appuie sur i pour avoir un debug de l'objet 3d projeté
-            //
-            if (keyboard.pressed("i")) {
-                console.log(markerObject3D);
-            }
+    //
+    //
+    // Si la fenêtre est redimensionnée, on met à jour la projection
+    //
+    //
+    window.addEventListener('resize', function () {
+      effect.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    }, false)
 
+    var firstFrame = 0,
+      videoEnded = 0,
+      firstMarker = 0;
 
+    //
+    //
+    // onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) : fonction appelée à tous les frames
+    //
+    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
+    //
+    //
+    function initVideo(video) {
+      videoStatus.currentVideoEl = video;
+      videoStatus.currentVideoEl.addEventListener('ended', function () {
+        onVideoEnded(videoStatus.currentVideoEl);
+      });
+    }
 
+    //
+    //
+    // onMarkersUpdated() : fonction appelée uniquement en cas de changement dans les marqueurs détectés (ajout, suppression)
+    //
+    // utilisée pour gérer les changements de source vidéo / pause, etc.
+    //
+    //
+    //
+    function onMarkersUpdated() {
+      if (videoStatus.newMarkerDetected === true) {
+        videoStatus.newMarkerDetected = false;
+        // Ici, on vient de trouver un nouveau marqueur
+        //
+        // on gère les différents cas
+        //
+        // 1. le marqueur de position (265) est le seul marqueur detecté, on lance la vidéo d'intro
+        //
+        // 2. le marqueur de position est detecté + un autre marqueur (pour l'instant : 1001)
+        //
+        // 3. le marqueur de position n'est pas trouvé, mais un autre marqueur est trouvé : on fait quoi ? pour l'instant : pause
+        //console.log(videoStatus.currentMarkersDetected, videoStatus.currentMarkersDetected.length);
+        if (videoStatus.currentMarkersDetected.length === 1) { // un seul marqueur trouvé
+          if (videoStatus.currentMarkersDetected.indexOf(0) > -1) { // c'est le marqueur de position
+            updateVideo(videoSrcList[0]);
+          } else { // ce n'est pas le marqueur de position, on fait quoi ?
+
+          }
+        } else if (videoStatus.currentMarkersDetected.length === 2) {
+          var index = videoStatus.currentMarkersDetected.indexOf(0),
+            currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.filter(function (i) {
+              return i !== 0
+            });
+          updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
         }
 
-        function render() {
-            movieMaterial.update();
-            backgroundTexture.update();
-            effect.render(scene, camera);
-        }
-    </script>
+      }
+    }
+
+    //
+    //
+    // onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) : fonction appelée à tous les frames
+    //
+    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
+    //
+    //
+    function onMarkerFound(marker, jsArucoMarker, markerObject3D, markers) {
+
+      // Markers :
+      //
+      // 265 -> Position marker + consignes
+      //
+      // 1001 -> vidéo mot papa
+      jsArucoMarker.markerToObject3D(markers[0], markerObject3D);
+      if(debugMode){
+        markerObject3DDebug.visible = true;
+        jsArucoMarker.markerToObject3D(markers[0], markerObject3DDebug);
+      }
+
+
+      markerObject3D.visible = true;
+
+      markerObject3D.translateX(130);
+      markerObject3D.translateY(-30);
+
+      videoStatus.currentMarkerId = marker.id;
+
+    }
+
+    //
+    // updateVideo (videoSrc) = met à jour la source le l'élément vidéo projeté
+    //
+    // param videoSrc = URL (string)
+    //
+
+    function updateVideo(videoSrc) {
+
+      // on ne met à jour que si la nouvelle source est différente de l'ancienne
+
+      if (videoSrc !== videoStatus.currentVideoEl.src) {
+        videoStatus.currentVideoEl.pause();
+        videoStatus.currentVideoEl.src = videoSrc;
+        videoStatus.currentVideoEl.play();
+      }
+
+    }
+
+    //
+    // onVideoEnded (video) = est déclenchée quand la video projetée a fini de jouer
+    //
+    // param video = élément video
+    //
+
+    function onVideoEnded() {
+      videoStatus.currentVideoEl.pause();
+
+      setTimeout(function () {
+        videoStatus.currentVideoEl.currentTime = 0;
+        videoStatus.currentVideoEl.play();
+      }, 5000);
+    }
+
+    function update() {
+
+      if (firstFrame === 0) {
+        // On attache l'écouteur qu'une fois, en passant video comme argument de la fonction (ça nous permet d'y accéder en dehors de update() )
+        firstFrame++;
+        initVideo(video);
+
+      }
+      //
+      // Si besoin, on appuie sur i pour avoir un debug de l'objet 3d projeté
+      //
+      if (keyboard.pressed("i")) {
+        console.log(markerObject3D);
+      }
+
+    }
+
+    function render() {
+      movieMaterial.update();
+      backgroundTexture.update();
+      effect.render(scene, camera);
+    }
+  </script>
 </body>
 
 </html>
