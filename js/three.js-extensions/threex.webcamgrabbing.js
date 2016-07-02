@@ -77,9 +77,13 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
         }, 500);
 
 
+        console.log('webcamgrabbing : ',sourceDeviceId);
+
         var constraints = {
                 video: {
-                  optional: [{sourceId: sourceDeviceId}]
+                  optional: [{
+                    sourceId: sourceDeviceId
+                  }]
                 }
         }
 
