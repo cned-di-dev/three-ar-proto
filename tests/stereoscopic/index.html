@@ -34,8 +34,11 @@
 
 <body id="AppRaCned">
 
+  <div id="intro">
+    <select id="video-source-selector"></select>
+    <button id="launchBtn" class="btn">Lancement proto</button>
+  </div>
 
-  <button id="launchBtn" class="btn">Lancement proto</button>
 
 
   <script id="vertexShader" type="x-shader/x-vertex">
@@ -48,6 +51,46 @@
 
 
   <script>
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+      console.log("enumerateDevices() not supported.");
+
+    }
+
+    // List cameras and microphones.
+    var selector = document.getElementById('video-source-selector');
+    navigator.mediaDevices.enumerateDevices()
+      .then(function(devices) {
+        var videoDevices = devices.map(function (item) {
+          if(item.kind === 'videoinput'){
+            return item;
+          }
+        }).filter(function( element ) {
+           return element !== undefined;
+        });
+        var max = videoDevices.length;
+        videoDevices.forEach(function(device, i) {
+          var html = '';
+          var div = document.createElement('div');
+          if(i === max-1){ // last element reached
+            html += '<option value="'+device.deviceId+'" selected>'+ device.label +'</option>';
+          }
+          else {
+            html += '<option value="'+device.deviceId+'">'+ device.label +'</option>';
+          }
+          div.innerHTML = html;
+          console.log(i, max);
+          selector.appendChild(div.childNodes[0]);
+
+          console.log(device.kind + ": " + device.label +
+            " id = " + device.deviceId);
+        });
+      })
+      .catch(function(err) {
+        console.log(err.name + ": " + err.message);
+      });
+
+
     if (Array.prototype.equals)
       console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
     // attach the .equals method to Array's prototype to call it on any array
@@ -214,7 +257,7 @@
 
     var markerObject3DDebug = new THREE.Object3D();
     scene.add(markerObject3DDebug);
-    
+
 
     //////////////////////////////////////////////////////////////////////////////////
     //		add an object in the markerObject3D
@@ -311,7 +354,7 @@
           update();
           previousTime = now;
 
-        }, 1000 / fps);
+        }, 25 / fps);
       }
       animationLoop();
 
@@ -322,7 +365,7 @@
       // init the marker recognition
       var jsArucoMarker = new THREEx.JsArucoMarker()
 
-      var videoGrabbing = new THREEx.WebcamGrabbing()
+      var videoGrabbing = new THREEx.WebcamGrabbing(selector.value)
       jsArucoMarker.videoScaleDown = 2
 
       //

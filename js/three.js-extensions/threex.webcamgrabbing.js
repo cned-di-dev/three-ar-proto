@@ -8,7 +8,7 @@ window.URL = window.URL || window.webkitURL;
  * Grab camera
  * @constructor
  */
-THREEx.WebcamGrabbing = function(){
+THREEx.WebcamGrabbing = function(sourceDeviceId){
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Comments
@@ -74,10 +74,13 @@ THREEx.WebcamGrabbing = function(){
         // just to be sure - resize on mobile is funky to say the least
         setInterval(function(){
                 onResize()
-        }, 500)
+        }, 500);
+
 
         var constraints = {
-                video: true
+                video: {
+                  optional: [{sourceId: sourceDeviceId}]
+                }
         }
 
 
