@@ -10,6 +10,9 @@
   <!-- DEPENDENCIES -->
   <!-- include MDL -->
 
+  <!-- include facingMode polyfill -->
+
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
   <!-- include three.js -->
   <script src='../../js/three.js/build/three.js'></script>
@@ -35,7 +38,7 @@
 <body id="AppRaCned">
 
   <div id="intro">
-    <select id="video-source-selector"></select>
+    
     <button id="launchBtn" class="btn">Lancement proto</button>
   </div>
 
@@ -56,42 +59,44 @@
       console.log("enumerateDevices() not supported.");
 
     }
+    // var videoRearSrc;
+    // navigator.mediaDevices.enumerateDevices()
+    //   .then(function(devices) {
+    //     var videoDevices = devices.map(function (item) {
+    //       if(item.kind === 'videoinput'){
+    //         return item;
+    //       }
+    //     }).filter(function( element ) {
+    //        return element !== undefined;
+    //     });
+    //     var max = videoDevices.length;
+    //     videoDevices.forEach(function(device, i) {
+    //       var html = '';
+    //       var div = document.createElement('div');
+    //       if(i === max-1){ // last element reached
+    //         html += '<option value="'+device.deviceId+'" selected>'+ device.label +'</option>';
+    //       }
+    //       else {
+    //         html += '<option value="'+device.deviceId+'">'+ device.label +'</option>';
+    //       }
+    //       div.innerHTML = html;
+    //       selector.appendChild(div.childNodes[0]);
+    //
+    //       console.log(device.kind + ": " + device.label +
+    //         " id = " + device.deviceId);
+    //     });
+    //   })
+    //   .catch(function(err) {
+    //     console.log(err.name + ": " + err.message);
+    //   });
 
-    // List cameras and microphones.
-    var selector = document.getElementById('video-source-selector');
-    navigator.mediaDevices.enumerateDevices()
-      .then(function(devices) {
-        var videoDevices = devices.map(function (item) {
-          if(item.kind === 'videoinput'){
-            return item;
-          }
-        }).filter(function( element ) {
-           return element !== undefined;
-        });
-        var max = videoDevices.length;
-        videoDevices.forEach(function(device, i) {
-          var html = '';
-          var div = document.createElement('div');
-          if(i === max-1){ // last element reached
-            html += '<option value="'+device.deviceId+'" selected>'+ device.label +'</option>';
-          }
-          else {
-            html += '<option value="'+device.deviceId+'">'+ device.label +'</option>';
-          }
-          div.innerHTML = html;
-          console.log(i, max);
-          selector.appendChild(div.childNodes[0]);
+      // navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } }).then(function (stream) {
+      //    videoRearSrc = stream;
+      // }).catch(function (e) {
+      //    console.log(e);
+      // });
 
-          console.log(device.kind + ": " + device.label +
-            " id = " + device.deviceId);
-        });
-      })
-      .catch(function(err) {
-        console.log(err.name + ": " + err.message);
-      });
-      selector.addEventListener("change", function(){
-        console.log(selector.value);
-      });
+
 
     if (Array.prototype.equals)
       console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
@@ -367,7 +372,7 @@
       // init the marker recognition
       var jsArucoMarker = new THREEx.JsArucoMarker()
 
-      var videoGrabbing = new THREEx.WebcamGrabbing(selector.value)
+      var videoGrabbing = new THREEx.WebcamGrabbing()
       jsArucoMarker.videoScaleDown = 2
 
       //

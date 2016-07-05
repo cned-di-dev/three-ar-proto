@@ -8,7 +8,7 @@ window.URL = window.URL || window.webkitURL;
  * Grab camera
  * @constructor
  */
-THREEx.WebcamGrabbing = function(sourceDeviceId){
+THREEx.WebcamGrabbing = function(){
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Comments
@@ -77,23 +77,30 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
         }, 500);
 
 
-        console.log('webcamgrabbing : ',sourceDeviceId);
+        // console.log('webcamgrabbing : ',sourceDeviceId);
 
         var constraints = {
-                video: {
-                  optional: [{
-                    sourceId: sourceDeviceId
-                  }]
-                }
+                // video: {
+                //   optional: [{
+                //     sourceId: sourceDeviceId
+                //   }]
+                // }
         }
 
 
         // try to get user media
-        navigator.getUserMedia( constraints, function(stream){
-                domElement.src = URL.createObjectURL(stream);
-        }, function(error) {
-                console.error("Cant getUserMedia()! due to ", error);
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } }).then(function (stream) {
+           domElement.src = URL.createObjectURL(stream);
+        }).catch(function (e) {
+           console.log(e);
         });
+
+        // navigator.getUserMedia( constraints, function(stream){
+        //         domElement.src = URL.createObjectURL(stream);
+        // }, function(error) {
+        //         console.error("Cant getUserMedia()! due to ", error);
+        // });
 
 
 	this.domElement = domElement
