@@ -81,7 +81,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
         var constraints = {
                 audio: false,
-                video: { facingMode: { exact: "environment" } }
+                video: true
         }
 
         console.log('Try to get stream with constraints:', constraints);
