@@ -81,18 +81,21 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
         var constraints = {
                 audio: false,
-                video: { facingMode: { exact: "user" } }
+                video: { facingMode: { exact: "environment" } }
         }
 
-
-        // try to get user media
-
-
         console.log('Try to get stream with constraints:', constraints);
+
         navigator.getUserMedia( constraints, function(stream){
                 var videoTracks = stream.getVideoTracks();
+
                 console.log('Got stream with constraints:', constraints);
                 console.log('Using video device: ' + videoTracks[0].label);
+
+                for(var i = 0; i < videoTracks.length; i++){
+                  console.log('Found video device : ', videoTracks[i].label);
+                }
+
                 domElement.src = URL.createObjectURL(stream);
         }, function(error) {
                 console.error("Cant getUserMedia()! due to ", error);
