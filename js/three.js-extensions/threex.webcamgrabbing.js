@@ -79,18 +79,9 @@ THREEx.WebcamGrabbing = function(){
 
         // console.log('webcamgrabbing : ',sourceDeviceId);
 
-        var constraints = {
-                // video: {
-                //   optional: [{
-                //     sourceId: sourceDeviceId
-                //   }]
-                // }
-        }
-
-
         // try to get user media
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } }).then(function (stream) {
+        navigator.getUserMedia({ video: { facingMode: { exact: 'environment' } } }).then(function (stream) {
            domElement.src = URL.createObjectURL(stream);
         }).catch(function (e) {
            console.log(e);
