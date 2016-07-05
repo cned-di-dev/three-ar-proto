@@ -89,7 +89,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
 
 
-        navigator.getUserMedia( constraints, function(stream){
+        navigator.mediaDevices.getUserMedia( constraints, function(stream){
                 domElement.src = URL.createObjectURL(stream);
         }, function(error) {
                 console.error("Cant getUserMedia()! due to ", error);
