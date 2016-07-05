@@ -80,7 +80,8 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
         // console.log('webcamgrabbing : ',sourceDeviceId);
 
         var constraints = {
-                video: { facingMode: { exact: 'environment' } }
+                audio: false,
+                video: { facingMode: { exact: "environment" } }
         }
 
 
