@@ -19,7 +19,7 @@ THREEx.WebcamTexture	= function(){
 	  navigator.getUserMedia(
 		    // Constraints
 		    {
-		      video: true
+		      video: {facingMode: {exact: 'environment'}}
 		    },
 
 		    // Success Callback
