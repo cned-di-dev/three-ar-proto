@@ -112,7 +112,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
                 audio: false,
                 video: { sourceId: backCamVideoId }
         }
-        alert('using backcam id : ', backCamVideoId);
+        alert('using backcam id : '+ backCamVideoId);
         console.log('Try to get stream with constraints:', constraints);
 
 
