@@ -84,8 +84,8 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
         var constraints = {
                 audio: false,
-                video: { sourceId: sourceDeviceId } }
-        }
+                video: { sourceId: sourceDeviceId }
+        };
 
 
 
