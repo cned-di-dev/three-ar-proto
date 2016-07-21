@@ -92,6 +92,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
             videoDevices.forEach(function(device, i) {
               if(i === 0){
                 // Front camera
+                frontCamVideoId = device.deviceId;
               }
               else if(i === 1) {
                 // Rear camera
@@ -111,7 +112,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
                 audio: false,
                 video: { sourceId: backCamVideoId }
         }
-
+        alert('using backcam id : ', backCamVideoId);
         console.log('Try to get stream with constraints:', constraints);
 
 
