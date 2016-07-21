@@ -108,7 +108,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
             console.log(err.name + ": " + err.message);
           });
 
-        alert('Try to get stream with constraints:'+ constraints);
+        alert('Try to get stream with input ID :'+ constraints.video.sourceId);
 
 
 
