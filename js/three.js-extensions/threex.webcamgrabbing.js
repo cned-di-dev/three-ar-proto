@@ -80,7 +80,8 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
         // console.log('webcamgrabbing : ',sourceDeviceId);
         var frontCamVideoId, backCamVideoId;
         var constraints = {
-          audio: false
+          audio: false,
+          video: {}
         };
         navigator.mediaDevices.enumerateDevices(constraints)
           .then(function(devices) {
