@@ -71,11 +71,12 @@
         });
         var max = videoDevices.length;
         videoDevices.forEach(function(device, i) {
+          console.log(i, device);
           if(i === 1){
+            alert(device.label + ' '+ device.deviceId);
+            
             videoRearSourceId = device.deviceId;
           }
-
-
         });
       })
       .catch(function(err) {
