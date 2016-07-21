@@ -101,34 +101,34 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
                 // Rear camera
                 constraints.video = { sourceId: device.deviceId };
               }
+              alert('Try to get stream with input ID :'+ constraints.video.sourceId);
 
+
+
+
+
+              navigator.getUserMedia( constraints, function(stream){
+                      var videoTracks = stream.getVideoTracks();
+
+                      console.log('Got stream with constraints:', constraints);
+                      console.log('Using video device: ' + videoTracks[0].label);
+
+                      for(var i = 0; i < videoTracks.length; i++){
+                        console.log('Found video device with contraints : ', videoTracks[i].label);
+                      }
+
+                      domElement.src = URL.createObjectURL(stream);
+              }, function(error) {
+                      console.error("Cant getUserMedia()! due to ", error);
+              });
+
+
+              this.domElement = domElement
             });
           })
           .catch(function(err) {
             console.log(err.name + ": " + err.message);
           });
 
-        alert('Try to get stream with input ID :'+ constraints.video.sourceId);
 
-
-
-
-
-        navigator.getUserMedia( constraints, function(stream){
-                var videoTracks = stream.getVideoTracks();
-
-                console.log('Got stream with constraints:', constraints);
-                console.log('Using video device: ' + videoTracks[0].label);
-
-                for(var i = 0; i < videoTracks.length; i++){
-                  console.log('Found video device with contraints : ', videoTracks[i].label);
-                }
-
-                domElement.src = URL.createObjectURL(stream);
-        }, function(error) {
-                console.error("Cant getUserMedia()! due to ", error);
-        });
-
-
-	this.domElement = domElement
 }
