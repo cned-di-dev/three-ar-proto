@@ -78,58 +78,32 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
 
         // console.log('webcamgrabbing : ',sourceDeviceId);
-        var frontCamVideoId, backCamVideoId;
+
+
+        alert(sourceDeviceId);
+
         var constraints = {
-          audio: false,
-          video: {}
-        };
-        navigator.mediaDevices.enumerateDevices(constraints)
-          .then(function(devices) {
-            var videoDevices = devices.map(function (item) {
-              if(item.kind === 'videoinput'){
-                return item;
-              }
-            }).filter(function( element ) {
-               return element !== undefined;
-            });
-
-            videoDevices.forEach(function(device, i) {
-              if(i === 0){
-                // Front camera
-                frontCamVideoId = device.deviceId;
-              }
-              else if(i === 1) {
-                // Rear camera
-                constraints.video = { sourceId: device.deviceId };
-              }
-              alert('Try to get stream with input ID :'+ constraints.video.sourceId);
+                audio: false,
+                video: { sourceId: sourceDeviceId } }
+        }
 
 
 
+        navigator.getUserMedia( constraints, function(stream){
+                var videoTracks = stream.getVideoTracks();
+
+                console.log('Got stream with constraints:', constraints);
+                console.log('Using video device: ' + videoTracks[0].label);
+
+                for(var i = 0; i < videoTracks.length; i++){
+                  console.log('Found video device with contraints : ', videoTracks[i].label);
+                }
+
+                domElement.src = URL.createObjectURL(stream);
+        }, function(error) {
+                console.error("Cant getUserMedia()! due to ", error);
+        });
 
 
-              navigator.getUserMedia( constraints, function(stream){
-                      var videoTracks = stream.getVideoTracks();
-
-                      console.log('Got stream with constraints:', constraints);
-                      console.log('Using video device: ' + videoTracks[0].label);
-
-                      for(var i = 0; i < videoTracks.length; i++){
-                        console.log('Found video device with contraints : ', videoTracks[i].label);
-                      }
-
-                      domElement.src = URL.createObjectURL(stream);
-              }, function(error) {
-                      console.error("Cant getUserMedia()! due to ", error);
-              });
-
-
-              this.domElement = domElement
-            });
-          })
-          .catch(function(err) {
-            console.log(err.name + ": " + err.message);
-          });
-
-
+	this.domElement = domElement
 }

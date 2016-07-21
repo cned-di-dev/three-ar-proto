@@ -59,36 +59,28 @@
       console.log("enumerateDevices() not supported.");
 
     }
-    // var videoRearSrc;
-    // navigator.mediaDevices.enumerateDevices()
-    //   .then(function(devices) {
-    //     var videoDevices = devices.map(function (item) {
-    //       if(item.kind === 'videoinput'){
-    //         return item;
-    //       }
-    //     }).filter(function( element ) {
-    //        return element !== undefined;
-    //     });
-    //     var max = videoDevices.length;
-    //     videoDevices.forEach(function(device, i) {
-    //       var html = '';
-    //       var div = document.createElement('div');
-    //       if(i === max-1){ // last element reached
-    //         html += '<option value="'+device.deviceId+'" selected>'+ device.label +'</option>';
-    //       }
-    //       else {
-    //         html += '<option value="'+device.deviceId+'">'+ device.label +'</option>';
-    //       }
-    //       div.innerHTML = html;
-    //       selector.appendChild(div.childNodes[0]);
-    //
-    //       console.log(device.kind + ": " + device.label +
-    //         " id = " + device.deviceId);
-    //     });
-    //   })
-    //   .catch(function(err) {
-    //     console.log(err.name + ": " + err.message);
-    //   });
+    var videoRearSourceId;
+    navigator.mediaDevices.enumerateDevices()
+      .then(function(devices) {
+        var videoDevices = devices.map(function (item) {
+          if(item.kind === 'videoinput'){
+            return item;
+          }
+        }).filter(function( element ) {
+           return element !== undefined;
+        });
+        var max = videoDevices.length;
+        videoDevices.forEach(function(device, i) {
+          if(i === 1){
+            videoRearSourceId = device.deviceId;
+          }
+
+
+        });
+      })
+      .catch(function(err) {
+        console.log(err.name + ": " + err.message);
+      });
 
       // navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } }).then(function (stream) {
       //    videoRearSrc = stream;
@@ -372,7 +364,7 @@
       // init the marker recognition
       var jsArucoMarker = new THREEx.JsArucoMarker()
 
-      var videoGrabbing = new THREEx.WebcamGrabbing()
+      var videoGrabbing = new THREEx.WebcamGrabbing(videoRearSourceId)
       jsArucoMarker.videoScaleDown = 2
 
       //
