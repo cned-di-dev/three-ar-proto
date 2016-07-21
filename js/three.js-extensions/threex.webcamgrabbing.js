@@ -80,12 +80,13 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
         // console.log('webcamgrabbing : ',sourceDeviceId);
 
 
-        navigator.mediaDevices.getUserMedia( {video: {facingMode: {exact: 'environment'}}})
+        navigator.mediaDevices
+                .getUserMedia( {video: {facingMode: {exact: 'environment'}}})
                 .then(function(stream){
                     domElement.srcObject = stream;
-        }).catch(function(error) {
-                console.error("Cant getUserMedia()! due to ", error);
-        });
+                }).catch(function(error) {
+                        console.error("Cant getUserMedia()! due to ", error);
+                });
 
 
 	this.domElement = domElement

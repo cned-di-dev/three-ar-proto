@@ -59,29 +59,28 @@
       console.log("enumerateDevices() not supported.");
 
     }
-    var videoRearSourceId;
-    navigator.mediaDevices.enumerateDevices()
-      .then(function(devices) {
-        var videoDevices = devices.map(function (item) {
-          if(item.kind === 'videoinput'){
-            return item;
-          }
-        }).filter(function( element ) {
-           return element !== undefined;
-        });
-        var max = videoDevices.length;
-        videoDevices.forEach(function(device, i) {
-          console.log(i, device);
-          if(i === 1){
-            alert(device.label + ' '+ device.deviceId);
-            
-            videoRearSourceId = device.deviceId;
-          }
-        });
-      })
-      .catch(function(err) {
-        console.log(err.name + ": " + err.message);
-      });
+    // var videoRearSourceId;
+    // navigator.mediaDevices.enumerateDevices()
+    //   .then(function(devices) {
+    //     var videoDevices = devices.map(function (item) {
+    //       if(item.kind === 'videoinput'){
+    //         return item;
+    //       }
+    //     }).filter(function( element ) {
+    //        return element !== undefined;
+    //     });
+    //     var max = videoDevices.length;
+    //     videoDevices.forEach(function(device, i) {
+    //       console.log(i, device);
+    //       if(i === 1){
+    //
+    //         videoRearSourceId = device.deviceId;
+    //       }
+    //     });
+    //   })
+    //   .catch(function(err) {
+    //     console.log(err.name + ": " + err.message);
+    //   });
 
       // navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } }).then(function (stream) {
       //    videoRearSrc = stream;
