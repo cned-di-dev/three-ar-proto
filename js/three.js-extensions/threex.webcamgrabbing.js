@@ -79,6 +79,9 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
         // console.log('webcamgrabbing : ',sourceDeviceId);
         var frontCamVideoId, backCamVideoId;
+        var constraints = {
+          audio: false
+        };
         navigator.mediaDevices.enumerateDevices(constraints)
           .then(function(devices) {
             var videoDevices = devices.map(function (item) {
@@ -96,24 +99,16 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
               }
               else if(i === 1) {
                 // Rear camera
-                backCamVideoId = device.deviceId;
+                constraints.video = { sourceId: device.deviceId };
               }
 
-
-              alert(i, device.kind + ": " + device.label +
-                " id = " + device.deviceId);
             });
           })
           .catch(function(err) {
             console.log(err.name + ": " + err.message);
           });
 
-        var constraints = {
-                audio: false,
-                video: { sourceId: backCamVideoId }
-        }
-        alert('using backcam id : '+ backCamVideoId);
-        console.log('Try to get stream with constraints:', constraints);
+        alert('Try to get stream with constraints:'+ constraints);
 
 
 
