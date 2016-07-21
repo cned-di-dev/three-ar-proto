@@ -100,7 +100,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
               }
 
 
-              alert(device.kind + ": " + device.label +
+              alert(i, device.kind + ": " + device.label +
                 " id = " + device.deviceId);
             });
           })
