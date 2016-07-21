@@ -34,9 +34,34 @@ AR.Marker = function(id, corners){
     console.log('Moins de 4 coins trouvés : ', corners);
   }
   else if (corners.length === 4 ){
-    console.log('4 coins trouvés : ', corners);    
+    console.log('4 coins trouvés : ');
+    corners.forEach(function(corner,index){
+      console.log('Coin '+index, corner);
+    });
   }
+  // if(this.corners){
+  //   this.prevCorners1 = this.corners;
+  // }
+  // if(this.prevCorners1){
+  //   this.prevCorners2 = this.prevCorners1;
+  // }
+  // if(this.corners && this.prevCorners1 && this.prevCorners2){
+  //
+  //   for(var i = 0; i < corners.length; i++){
+  //     this.corners[i].x = (corners[i].x + this.prevCorners1[i].x + this.prevCorners2[i].x) / 3;
+  //     this.corners[i].y = (corners[i].y + this.prevCorners1[i].y + this.prevCorners2[i].y) / 3;
+  //
+  //   }
+  //     //this.flatCorners[coord] = (corners[coord] + this.prevCorners1[coord] + this.prevCorners2[coord])/3
+  //
+  // }
+  // else {
+  //   this.corners = corners;
+  // }
   this.corners = corners;
+
+
+
 };
 
 AR.Detector = function(){
@@ -51,7 +76,7 @@ AR.Detector = function(){
 
 AR.Detector.prototype.detect = function(image){
   CV.grayscale(image, this.grey);
-  CV.adaptiveThreshold(this.grey, this.thres, 2, 7);
+  CV.adaptiveThreshold(this.grey, this.thres, 1, 10);
 
   this.contours = CV.findContours(this.thres, this.binary);
 

@@ -78,15 +78,7 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
 
 
         // console.log('webcamgrabbing : ',sourceDeviceId);
-
-        var constraints = {
-                audio: false,
-                video: { facingMode: { exact: "environment" } }
-        }
-
-        console.log('Try to get stream with constraints:', constraints);
-
-
+        var frontCamVideoId, backCamVideoId;
         navigator.mediaDevices.enumerateDevices(constraints)
           .then(function(devices) {
             var videoDevices = devices.map(function (item) {
@@ -96,8 +88,15 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
             }).filter(function( element ) {
                return element !== undefined;
             });
-            
+
             videoDevices.forEach(function(device, i) {
+              if(i === 0){
+                // Front camera
+              }
+              else if(i === 1) {
+                // Rear camera
+                backCamVideoId = device.deviceId;
+              }
 
 
               console.log(device.kind + ": " + device.label +
@@ -107,6 +106,16 @@ THREEx.WebcamGrabbing = function(sourceDeviceId){
           .catch(function(err) {
             console.log(err.name + ": " + err.message);
           });
+
+        var constraints = {
+                audio: false,
+                video: { sourceId: backCamVideoId }
+        }
+
+        console.log('Try to get stream with constraints:', constraints);
+
+
+
 
 
         navigator.getUserMedia( constraints, function(stream){
