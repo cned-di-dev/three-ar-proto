@@ -194,9 +194,7 @@ window.ARThreeOnLoad = function() {
 			cube.position.z = 0;
 			cube.position.x = 2;
 			cube.position.y = -0.5;
-			var markerRoot = arController.createThreeBarcodeMarker(0, function (marker) {
-				console.log(marker);
-			});
+			var markerRoot = arController.createThreeBarcodeMarker(0);
 			var markerSubs1 = arController.createThreeBarcodeMarker(33);
 
 			markerRoot.add(cube);
@@ -234,7 +232,7 @@ window.ARThreeOnLoad = function() {
 				var flag = ev.data.type > -1 ? true:false;
 
 				if(flag){
-				 onMarkerFound(ev);
+				 videoStatus.currentVideoEl.play();
 				}
 				else {
 					videoStatus.currentVideoEl.pause();
@@ -267,33 +265,43 @@ window.ARThreeOnLoad = function() {
 
 			function onMarkersUpdated() {
 				console.log('markers updated');
-	      if (videoStatus.newMarkerDetected === true) {
-	        videoStatus.newMarkerDetected = false;
-	        // Ici, on vient de trouver un nouveau marqueur
-	        //
-	        // on gère les différents cas
-	        //
-	        // 1. le marqueur de position (265) est le seul marqueur detecté, on lance la vidéo d'intro
-	        //
-	        // 2. le marqueur de position est detecté + un autre marqueur (pour l'instant : 1001)
-	        //
-	        // 3. le marqueur de position n'est pas trouvé, mais un autre marqueur est trouvé : on fait quoi ? pour l'instant : pause
-	        //console.log(videoStatus.currentMarkersDetected, videoStatus.currentMarkersDetected.length);
-	        if (videoStatus.currentMarkersDetected.length === 1) { // un seul marqueur trouvé
-	          if (videoStatus.currentMarkersDetected.indexOf(0) > -1) { // c'est le marqueur de position
-	            updateVideo(videoSrcList[0]);
-	          } else { // ce n'est pas le marqueur de position, on fait quoi ?
+				if (videoStatus.currentMarkersDetected.length === 1) { // un seul marqueur trouvé
+	      	if (videoStatus.currentMarkersDetected.indexOf(0) > -1) {
+						videoStatus.currentVideoEl.play();
+					}
+				}
+				else {
+					videoStatus.currentVideoEl.pause();
+				}
 
-	          }
-	        } else if (videoStatus.currentMarkersDetected.length === 2) {
-	          var index = videoStatus.currentMarkersDetected.indexOf(0),
-	            currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.filter(function (i) {
-	              return i !== 0
-	            });
-	          updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
-	        }
 
-	      }
+	      // if (videoStatus.newMarkerDetected === true) {
+	      //   videoStatus.newMarkerDetected = false;
+	      //   // Ici, on vient de trouver un nouveau marqueur
+	      //   //
+	      //   // on gère les différents cas
+	      //   //
+	      //   // 1. le marqueur de position (265) est le seul marqueur detecté, on lance la vidéo d'intro
+	      //   //
+	      //   // 2. le marqueur de position est detecté + un autre marqueur (pour l'instant : 1001)
+	      //   //
+	      //   // 3. le marqueur de position n'est pas trouvé, mais un autre marqueur est trouvé : on fait quoi ? pour l'instant : pause
+	      //   //console.log(videoStatus.currentMarkersDetected, videoStatus.currentMarkersDetected.length);
+	      //   if (videoStatus.currentMarkersDetected.length === 1) { // un seul marqueur trouvé
+	      //     if (videoStatus.currentMarkersDetected.indexOf(0) > -1) { // c'est le marqueur de position
+	      //       updateVideo(videoSrcList[0]);
+	      //     } else { // ce n'est pas le marqueur de position, on fait quoi ?
+				//
+	      //     }
+	      //   } else if (videoStatus.currentMarkersDetected.length === 2) {
+	      //     var index = videoStatus.currentMarkersDetected.indexOf(0),
+	      //       currentMarkersDetectedWithout0 = videoStatus.currentMarkersDetected.filter(function (i) {
+	      //         return i !== 0
+	      //       });
+	      //     updateVideo(videoSrcList[currentMarkersDetectedWithout0]);
+	      //   }
+				//
+	      // }
 	    }
 			function markersUpdated (){
 				console.log(videoStatus.currentMarkersDetected);
@@ -330,39 +338,39 @@ window.ARThreeOnLoad = function() {
 				return check;
 			}
 			function onMarkerFound (ev) {
-
-				var markerNum = arController.getMarkerNum(),
-				markerIdMatrix = ev.data.marker.idMatrix;
-				if (markerNum > 0) {
-					if ( markerRoot.visible) {
-						console.log('markerRoot visible');
-						videoStatus.currentVideoEl.play();
-						if( !isInCurrentMarkers(0) ){
-							addToCurrentMarkers(0);
-						}
-
-
-
-						if(markerIdMatrix === 33){
-							if(!isInCurrentMarkers(33)){
-								updateVideo(videoSrcList[1]);
-								addToCurrentMarkers(33);
-							}
-						}
-						else {
-							removeFromCurrentMarkers(33);
-							updateVideo(videoSrcList[0]);
-						}
-
-					}
-					else {
-						videoStatus.currentVideoEl.pause();
-						removeFromCurrentMarkers(0);
-					}
-				}
-				else {
-					videoStatus.currentVideoEl.pause();
-				}
+				videoStatus.currentVideoEl.play();
+				// var markerNum = arController.getMarkerNum(),
+				// markerIdMatrix = ev.data.marker.idMatrix;
+				// if (markerNum > 0) {
+				// 	if ( markerRoot.visible) {
+				// 		console.log('markerRoot visible');
+				// 		videoStatus.currentVideoEl.play();
+				// 		if( !isInCurrentMarkers(0) ){
+				// 			addToCurrentMarkers(0);
+				// 		}
+				//
+				//
+				//
+				// 		if(markerIdMatrix === 33){
+				// 			if(!isInCurrentMarkers(33)){
+				// 				updateVideo(videoSrcList[1]);
+				// 				addToCurrentMarkers(33);
+				// 			}
+				// 		}
+				// 		else {
+				// 			removeFromCurrentMarkers(33);
+				// 			updateVideo(videoSrcList[0]);
+				// 		}
+				//
+				// 	}
+				// 	else {
+				// 		videoStatus.currentVideoEl.pause();
+				// 		removeFromCurrentMarkers(0);
+				// 	}
+				// }
+				// else {
+				// 	videoStatus.currentVideoEl.pause();
+				// }
 
 
 
