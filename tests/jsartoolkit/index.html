@@ -190,6 +190,20 @@ window.ARThreeOnLoad = function() {
 			};
 			var marker1 = new RAMarker(0, 0);
 			var marker2 = new RAMarker(1, 33);
+			var geometry = new THREE.PlaneBufferGeometry(2.72, 1.53); //16:9
+			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
+
+			var cube = new THREE.Mesh(
+				geometry,
+				movieMaterial
+			);
+			cube.material.shading = THREE.FlatShading;
+			cube.position.z = 0;
+			cube.position.x = 2;
+			cube.position.y = -0.5;
+			var markerRoot = arController.createThreeBarcodeMarker(0);
+			markerRoot.add(cube);
+			arScene.scene.add(markerRoot);
 
 			var firstFrame = 0,
 	      videoEnded = 0,
@@ -251,76 +265,103 @@ window.ARThreeOnLoad = function() {
 					console.log('changed marker2.visible to false');
 				}
 			}
-			arController.loadMultiMarker('Data/multi-barcode-4x3.dat', function(marker, markerNum) {
 
 
+			function onEachFrame () {
+				checkMarkerVisible();
+				// if(videoStatus.currentVideoEl){
+				// 	if(marker1.visible && !marker2.visible){
+				// 		updateVideo(marker1.videoSrc);
+				//
+				//
+				// 	}
+				// 	else if (marker1.visible && marker2.visible){
+				// 		updateVideo(marker2.videoSrc);
+				// 	}
+				// 	else {
+				// 		videoStatus.currentVideoEl.pause();
+				// 	}
+				// }
 
-				console.log('multi is', marker);
-				console.log('submarker count', markerNum);
+			}
+			// arController.loadMultiMarker('Data/multi-barcode-4x3.dat', function(marker, markerNum) {
+			//
+			//
+			//
+			// 	console.log('multi is', marker);
+			// 	console.log('submarker count', markerNum);
+			//
+			//
+			//
+			// 	arController.addEventListener('getMarker', function (e) {
+			// 		var marker = e.data.marker.id;
+			// 		console.log(marker);
+			// 		if(marker > -1){
+			// 			handleNewMarker(marker);
+			// 		}
+			// 	});
+			// 	var markerRoot = arController.createThreeMultiMarker(marker);
+			// 	arScene.scene.add(markerRoot);
+			//
+			//
+			// 	var geometry = new THREE.PlaneBufferGeometry(2.72, 1.53); //16:9
+			// 	var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
+			//
+			// 	var cube = new THREE.Mesh(
+			// 		geometry,
+			// 		movieMaterial
+			// 	);
+			// 	cube.material.shading = THREE.FlatShading;
+			// 	cube.position.z = 0;
+			// 	cube.position.x = 2;
+			// 	cube.position.y = -0.5;
+			// 	markerRoot.markers[0] = cube;
+			// 	// Create an object that tracks the marker transform.
+			// 	// var markerRoot = arController.createThreeBarcodeMarker(0);
+			// 	//
+			// 	// markerRoot.add(cube);
+			// 	// arScene.scene.add(markerRoot);
+			//
+			//
+			// 	var firstFrame = true;
+			// 	var tick = function() {
+			// 		requestAnimationFrame(tick);
+			//
+			// 		checkMarkerVisible();
+			//
+			// 		arScene.process();
+			// 		arScene.renderOn(rendererL);
+			// 		arScene.renderOn(rendererR);
+			// 		if(firstFrame){
+			// 			firstFrame = false;
+			// 			initVideo(video);
+			// 		}
+			// 	};
+			// 	tick();
+			//
+			// });
 
-
-
-				arController.addEventListener('getMarker', function (e) {
-					var marker = e.data.marker.id;
-					if(marker > -1){
+			arController.addEventListener('getMarker', function (e) {
+					var marker = e.data.marker.idMatrix;
+					if(e.data.type > -1 && marker >-1){
 						handleNewMarker(marker);
 					}
 				});
-				var markerRoot = arController.createThreeMultiMarker(marker);
-				arScene.scene.add(markerRoot);
-
-
-				var geometry = new THREE.PlaneBufferGeometry(2.72, 1.53); //16:9
-				var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
-
-				var cube = new THREE.Mesh(
-					geometry,
-					movieMaterial
-				);
-				cube.material.shading = THREE.FlatShading;
-				cube.position.z = 0;
-				cube.position.x = 2;
-				cube.position.y = -0.5;
-				markerRoot.markers[0] = cube;
-				// Create an object that tracks the marker transform.
-				// var markerRoot = arController.createThreeBarcodeMarker(0);
-				//
-				// markerRoot.add(cube);
-				// arScene.scene.add(markerRoot);
-
-
-				var firstFrame = true;
-				var tick = function() {
-					requestAnimationFrame(tick);
-
-					checkMarkerVisible();
-
-					arScene.process();
-					arScene.renderOn(rendererL);
-					arScene.renderOn(rendererR);
-					if(firstFrame){
-						firstFrame = false;
-						initVideo(video);
-					}
-				};
-				tick();
-
-			});
-
-
 			function updateVideo(videoSrc) {
 				console.log('updating video');
+
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
 		        videoStatus.currentVideoEl.pause();
+						console.log(videoSrc);
 		        videoStatus.currentVideoEl.src = videoSrc;
+						console.log(videoStatus.currentVideoEl.src);
 		        videoStatus.currentVideoEl.play();
 		      }
 				}
 				else {
 					videoStatus.currentVideoEl.pause();
-	        videoStatus.currentVideoEl.src = '';
 				}
 
 	    }
@@ -487,27 +528,27 @@ window.ARThreeOnLoad = function() {
 
 
 
-			// var tick = function() {
-			// 	arScene.process();
-			// 	cube.rotation.z += rotationV;
-			// 	rotationV *= 0.8;
-			// 	movieMaterial.update();
-			// 	arScene.renderOn(rendererL);
-			// 	arScene.renderOn(rendererR);
-			// 	requestAnimationFrame(tick);
-			//
-			// 	if (firstFrame === 0) {
-	    //     // On attache l'écouteur qu'une fois, en passant video comme argument de la fonction (ça nous permet d'y accéder en dehors de update() )
-	    //     firstFrame++;
-	    //     initVideo(video);
-			//
-	    //   }
-			//
-			//
-			//
-			// };
-			//
-			// tick();
+			var tick = function() {
+				arScene.process();
+				cube.rotation.z += rotationV;
+				rotationV *= 0.8;
+				movieMaterial.update();
+				arScene.renderOn(rendererL);
+				arScene.renderOn(rendererR);
+				requestAnimationFrame(tick);
+				onEachFrame();
+				if (firstFrame === 0) {
+	        // On attache l'écouteur qu'une fois, en passant video comme argument de la fonction (ça nous permet d'y accéder en dehors de update() )
+	        firstFrame++;
+	        initVideo(video);
+
+	      }
+
+
+
+			};
+
+			tick();
 
 		}
 	});
