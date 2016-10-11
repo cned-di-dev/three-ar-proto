@@ -149,7 +149,7 @@ window.ARThreeOnLoad = function() {
 	ARController.getUserMediaThreeScene({
 		maxARVideoSize: 640,
 		cameraParam: 'Data/camera_para_android.dat',
-		facingMode: { exact: 'environment'},
+		facing: { exact: 'environment'},
 		onSuccess: function(arScene, arController, arCamera) {
 
 			document.body.className = arController.orientation;
