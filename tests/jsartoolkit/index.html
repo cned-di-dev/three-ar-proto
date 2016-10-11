@@ -4,31 +4,31 @@
 <title>Mixed marker example with Three.js</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 <style>
-html,body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	text-align: center;
-	overflow-x: hidden;
-	background: #000;
-}
-.portrait canvas {
-	transform-origin: 0 0;
-	transform: rotate(-90deg) translateX(-100%);
-}
-.desktop canvas {
- 	transform: scale(-1, 1);
-}
-canvas {
-	position: absolute;
-	top: 50%;
-	right: 0;
-	transform: translateY(-50%);
-}
-canvas:first-child {
-	left: 0;
-	right: auto;
-}
+	html,body {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		text-align: center;
+		overflow-x: hidden;
+		background: #000;
+	}
+	.portrait canvas {
+		transform-origin: 0 0;
+		transform: rotate(-90deg) translateX(-100%);
+	}
+	.desktop canvas {
+	 	transform: scale(-1, 1);
+	}
+	canvas {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
+	}
+	canvas:first-child {
+		left: 0;
+		right: auto;
+	}
 </style>
 </head>
 <body>
@@ -148,7 +148,7 @@ window.ARThreeOnLoad = function() {
 
 	ARController.getUserMediaThreeScene({
 		maxARVideoSize: 640,
-		cameraParam: 'Data/camera_para.dat',
+		cameraParam: 'Data/camera_para_android.dat',
 		onSuccess: function(arScene, arController, arCamera) {
 
 			document.body.className = arController.orientation;
@@ -182,14 +182,14 @@ window.ARThreeOnLoad = function() {
 
 			var checkDuration = 500;
 
-			var RAMarker = function(id, markerId) {
+			var RAMarker = function(id) {
 				this.videoSrc = videoSrcList[id];
-				this.markerId = markerId;
+				this.markerId = id;
 			  this.ts = 0;
 			  this.visible = false;
 			};
-			var marker1 = new RAMarker(0, 0);
-			var marker2 = new RAMarker(1, 33);
+			var marker1 = new RAMarker(0);
+			var marker2 = new RAMarker(1);
 			var geometry = new THREE.PlaneBufferGeometry(2.72, 1.53); //16:9
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
 
@@ -237,7 +237,7 @@ window.ARThreeOnLoad = function() {
 
 
 				}
-				if(newMarker === 33){
+				if(newMarker === 1){
 					if(marker2.visible === false){
 						marker2.visible = true;
 						if(marker1.visible){
