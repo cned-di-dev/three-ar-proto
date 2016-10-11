@@ -147,7 +147,8 @@ Object.defineProperty(Array.prototype, "equals", {
 window.ARThreeOnLoad = function() {
 
 	ARController.getUserMediaThreeScene({
-		
+		maxARVideoSize: 320,
+		cameraParam: '',
 		facing: 'environment',
 		onSuccess: function(arScene, arController, arCamera) {
 
