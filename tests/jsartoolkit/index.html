@@ -148,8 +148,8 @@ window.ARThreeOnLoad = function() {
 
 	ARController.getUserMediaThreeScene({
 		maxARVideoSize: 320,
-		cameraParam: 'Data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
-		facing: 'environment',
+		cameraParam: 'Data/camera_para.dat',
+		facing: { exact: 'environment'},
 		onSuccess: function(arScene, arController, arCamera) {
 
 			document.body.className = arController.orientation;
@@ -162,19 +162,7 @@ window.ARThreeOnLoad = function() {
 			ratio = arController.videoWidth / arController.videoHeight;
 			rendererL.setSize(rendererWidth, rendererWidth/ratio);
 			rendererR.setSize(rendererWidth, rendererWidth/ratio);
-			// if (arController.orientation === 'portrait') {
-			// 	var w = (window.innerWidth / arController.videoHeight) * arController.videoWidth;
-			// 	var h = window.innerWidth;
-			// 	renderer.setSize(w, h);
-			// 	renderer.domElement.style.paddingBottom = (w-h) + 'px';
-			// } else {
-			// 	if (/Android|mobile|iPad|iPhone/i.test(navigator.userAgent)) {
-			// 		renderer.setSize(window.innerWidth, (window.innerWidth / arController.videoWidth) * arController.videoHeight);
-			// 	} else {
-			// 		renderer.setSize(arController.videoWidth, arController.videoHeight);
-			// 		document.body.className += ' desktop';
-			// 	}
-			// }
+
 
 			document.body.insertBefore(rendererL.domElement, document.body.firstChild);
 			document.body.insertBefore(rendererR.domElement, document.body.firstChild);
@@ -191,7 +179,7 @@ window.ARThreeOnLoad = function() {
 			};
 			var marker1 = new RAMarker(0);
 			var marker2 = new RAMarker(1);
-			var geometry = new THREE.PlaneBufferGeometry(2.72, 1.53); //16:9
+			var geometry = new THREE.PlaneGeometry(2.72, 1.53); //16:9
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
 
 			var cube = new THREE.Mesh(
