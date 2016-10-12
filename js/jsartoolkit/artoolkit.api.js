@@ -1107,6 +1107,7 @@
 		});
 
 		var success = function(stream) {
+			console.log(stream);
 			video.addEventListener('loadedmetadata', initProgress, false);
 			video.src = window.URL.createObjectURL(stream);
 			readyToPlay = true;
@@ -1143,7 +1144,7 @@
 			}
 		}
 
-		mediaDevicesConstraints.facingMode = facing;
+		mediaDevicesConstraints.facingMode = {exact: 'environment'};
 
 		// navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		// var hdConstraints = {
@@ -1154,6 +1155,19 @@
 		// if ( false ) {
 		// if ( navigator.mediaDevices || window.MediaStreamTrack) {
 			//if (navigator.mediaDevices) {
+			navigator.mediaDevices.enumerateDevices()
+			.then(function(devices) {
+			  devices.forEach(function(device) {
+					if(device.kind === 'videoinput'){
+						alert(device.kind + ": " + device.label +
+				                " id = " + device.deviceId);
+					}
+
+			  });
+			})
+			.catch(function(err) {
+			  console.log(err.name + ": " + err.message);
+			});
 				navigator.mediaDevices.getUserMedia({
 					audio: false,
 					video: {facingMode: {exact: 'environment'}}
