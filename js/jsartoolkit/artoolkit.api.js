@@ -1107,7 +1107,6 @@
 		});
 
 		var success = function(stream) {
-			console.log(stream);
 			video.addEventListener('loadedmetadata', initProgress, false);
 			video.src = window.URL.createObjectURL(stream);
 			readyToPlay = true;
@@ -1158,13 +1157,12 @@
 			navigator.mediaDevices.enumerateDevices()
 			.then(function(devices) {
 			  devices.forEach(function(device) {
-
+					console.log(device.kind + ": " + device.label +
+											" id = " + device.deviceId);
 					if(device.kind === 'videoinput'){
 						console.log(device.kind + ": " + device.label +
 				                " id = " + device.deviceId);
-						if(device.label.indexOf('back') > -1){
-							console.log(device.label);
-						}
+
 					}
 
 			  });
