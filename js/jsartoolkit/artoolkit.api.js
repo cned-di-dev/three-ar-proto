@@ -1158,10 +1158,13 @@
 			navigator.mediaDevices.enumerateDevices()
 			.then(function(devices) {
 			  devices.forEach(function(device) {
-					console.log(device.label.indexOf('back'));
-					if(device.kind === 'videoinput' && device.label.indexOf('back') > -1){
+
+					if(device.kind === 'videoinput'){
 						console.log(device.kind + ": " + device.label +
 				                " id = " + device.deviceId);
+						if(device.label.indexOf('back') > -1){
+							console.log(device.label);
+						}
 					}
 
 			  });
