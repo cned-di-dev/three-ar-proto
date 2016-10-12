@@ -1148,9 +1148,7 @@
 		navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		var hdConstraints = {
 			audio: false,
-			video: {
-				mandatory: constraints
-		  	}
+			video: {facingMode: {exact: 'environment'}}
 		};
 
 		if ( false ) {
@@ -1158,7 +1156,7 @@
 			if (navigator.mediaDevices) {
 				navigator.mediaDevices.getUserMedia({
 					audio: false,
-					video: mediaDevicesConstraints
+					video: {facingMode: {exact: 'environment'}}
 				}).then(success, onError);
 			} else {
 				MediaStreamTrack.getSources(function(sources) {
