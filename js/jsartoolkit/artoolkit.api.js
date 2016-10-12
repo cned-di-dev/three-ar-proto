@@ -1158,8 +1158,8 @@
 			navigator.mediaDevices.enumerateDevices()
 			.then(function(devices) {
 			  devices.forEach(function(device) {
-					if(device.kind === 'videoinput'){
-						alert(device.kind + ": " + device.label +
+					if(device.kind === 'videoinput' && device.label.indexOf('back') > -1){
+						console.log(device.kind + ": " + device.label +
 				                " id = " + device.deviceId);
 					}
 
@@ -1168,10 +1168,7 @@
 			.catch(function(err) {
 			  console.log(err.name + ": " + err.message);
 			});
-				navigator.mediaDevices.getUserMedia({
-					audio: false,
-					video: {facingMode: {exact: 'environment'}}
-				}).then(success, onError);
+				navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: 'environment'}}}).then(success, onError);
 		// 	} else {
 		// 		MediaStreamTrack.getSources(function(sources) {
 		// 			var facingDir = mediaDevicesConstraints.facingMode;
