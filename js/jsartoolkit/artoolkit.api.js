@@ -1157,14 +1157,14 @@
 			console.log(navigator.mediaDevices);
 			navigator.mediaDevices.enumerateDevices()
 			.then(function(devices) {
-				console.log(devices);
 			  devices.forEach(function(device) {
-					console.log(device.kind + ": " + device.label +
-											" id = " + device.deviceId);
-					if(device.kind === 'videoinput'){
-						console.log(device.kind + ": " + device.label +
-				                " id = " + device.deviceId);
 
+					if(device.kind === 'videoinput'){
+
+												if(device.label.indexOf('back') > -1){
+													console.log(device.kind + ": " + device.label +
+											                " id = " + device.deviceId);
+												}
 					}
 
 			  });
