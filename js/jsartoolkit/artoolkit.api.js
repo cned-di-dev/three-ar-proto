@@ -1154,6 +1154,7 @@
 		// if ( false ) {
 		// if ( navigator.mediaDevices || window.MediaStreamTrack) {
 			//if (navigator.mediaDevices) {
+			console.log(navigator.mediaDevices);
 			navigator.mediaDevices.enumerateDevices()
 			.then(function(devices) {
 			  devices.forEach(function(device) {
