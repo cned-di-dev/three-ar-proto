@@ -1,0 +1,244 @@
+
+<html>
+<head>
+<title>Mixed marker example with Three.js</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<style>
+	html,body {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		text-align: center;
+		overflow-x: hidden;
+		background: #000;
+	}
+	.portrait canvas {
+		transform-origin: 0 0;
+		transform: rotate(-90deg) translateX(-100%);
+	}
+	.desktop canvas {
+	 	transform: scale(-1, 1);
+	}
+	canvas {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
+	}
+	canvas:first-child {
+		left: 0;
+		right: auto;
+	}
+</style>
+</head>
+<body>
+
+
+<script src="../../js/jsartoolkit/artoolkit.min.js"></script>
+<script src="../../js/three.js/build/three.js"></script>
+<script src="../../js/jsartoolkit/artoolkit.three.js"></script>
+
+<script src='../../js/three.js/build/three.stereoscopic.js'></script>
+<script src='../../js/three.js/build/three.videoTexture.js'></script>
+<script src='../../js/three.js-extensions/threex.webcamgrabbing.js'></script>
+<script src='../../js/three.js-extensions/threex.imagegrabbing.js'></script>
+<script src='../../js/three.js-extensions/threex.videograbbing.js'></script>
+<script src='../../js/three.js-extensions/threex.webcamtexture.js'></script>
+
+
+<script id="vertexShader" type="x-shader/x-vertex">
+	varying vec2 vUv; void main() { vUv = uv; vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); gl_Position = projectionMatrix * mvPosition; }
+</script>
+
+<script id="fragmentShader" type="x-shader/x-fragment">
+	uniform sampler2D texture; uniform vec3 color; varying vec2 vUv; void main() { vec3 tColor = texture2D( texture, vUv ).rgb; float a = (length(tColor - color) - 0.5) * 7.0; gl_FragColor = vec4(tColor, a); }
+</script>
+
+<script>
+var videoSrcList = [
+	"../../videos/intro-lg.mp4",
+	"../../videos/papa-lg.mp4",
+	"../../videos/maman-lg.mp4",
+	"../../videos/a-lent-lg.mp4",
+	"../../videos/a-rapide-lg.mp4",
+	"../../videos/m-lent-lg.mp4",
+	"../../videos/m-rapide-lg.mp4"
+
+];
+
+// ChromaKeyMaterial = function (url, width, height, keyColor) {
+// 	THREE.ShaderMaterial.call(this);
+// 	videoInner = document.createElement('video');
+// 	videoInner.loop = false;
+// 	videoInner.src = url;
+// 	videoInner.load();
+//
+// 	var videoImage = document.createElement('canvas');
+// 	if (window["webkitURL"]) document.body.appendChild(videoImage);
+// 	videoImage.width = width;
+// 	videoImage.height = height;
+// 	// videoImage.style.display = 'none';
+// 	var keyColorObject = new THREE.Color(keyColor);
+// 	var videoImageContext = videoImage.getContext('2d');
+// 	// background color if no video present
+// 	videoImageContext.fillStyle = '#' + keyColorObject.getHexString();
+// 	videoImageContext.fillRect(0, 0, videoImage.width, videoImage.height);
+// 	var videoTexture = new THREE.Texture(videoImage);
+// 	videoTexture.minFilter = THREE.LinearFilter;
+// 	videoTexture.magFilter = THREE.LinearFilter;
+// 	this.update = function () {
+// 		if (videoInner.readyState === videoInner.HAVE_ENOUGH_DATA) {
+// 			videoImageContext.drawImage(videoInner, 0, 0);
+// 			if (videoTexture) {
+// 				videoTexture.needsUpdate = true;
+// 			}
+// 		}
+// 	}
+// 	this.setValues({
+// 		uniforms: {
+// 			texture: {
+// 				type: "t",
+// 				value: videoTexture
+// 			},
+// 			color: {
+// 				type: "c",
+// 				value: keyColorObject
+// 			}
+// 		},
+// 		vertexShader: document.getElementById('vertexShader').textContent,
+// 		fragmentShader: document.getElementById('fragmentShader').textContent,
+// 		transparent: true
+// 	});
+// }
+// ChromaKeyMaterial.prototype = Object.create(THREE.ShaderMaterial.prototype);
+
+
+
+
+	var video = ARController.getUserMedia({
+		maxARVideoSize: 320, // do AR processing on scaled down video of this size
+		facing: "environment",
+		onSuccess: function(video) {
+			console.log('got video', video);
+			var arController = new ARController(video, 'Data/camera_para.dat');
+			arController.onload = function() {
+				console.log('ARController ready for use', arController);
+				arController.setPatternDetectionMode(artoolkit.AR_MATRIX_CODE_DETECTION);
+				// Create renderer with a size that matches the video.
+				//
+				var renderer = new THREE.WebGLRenderer({ antialias: true });
+				renderer.setSize(video.videoWidth, video.videoHeight);
+				document.body.appendChild(renderer.domElement);
+				document.body.appendChild(video);
+				// Set up the scene and camera.
+				//
+				var scene = new THREE.Scene();
+				var camera = new THREE.Camera();
+				var markerRoot = new THREE.Object3D();
+				var videoScene = new THREE.Scene();
+				var videoCamera = new THREE.OrthographicCamera(-1, 1, -1, 1, -1, 1);
+				var geometry = new THREE.PlaneBufferGeometry(2.72, 1.53); //16:9
+				//var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
+				var backgroundTexture = new THREEx.WebcamTexture();
+				var cube = new THREE.Mesh(
+					geometry,
+					new THREE.MeshLambertMaterial({color: 0x990000})
+				);
+				// To display the video, first create a texture from it.
+				var videoTex = new THREE.Texture(video);
+
+				// Use linear downscaling for videoTex
+				// (otherwise it needs to be power-of-two sized and you
+				// need to generate mipmaps, which are kinda useless here)
+				videoTex.minFilter = THREE.LinearFilter;
+				videoTex.magFilter = THREE.LinearFilter;
+				// And unflip the video Y-axis.
+				videoTex.flipY = false;
+				var plane = new THREE.Mesh(
+				  new THREE.PlaneBufferGeometry(1,1),
+				  new THREE.MeshBasicMaterial({map: videoTex})
+				);
+
+
+				// Then create a plane textured with the video.
+
+
+				// The video plane shouldn't care about the z-buffer.
+				plane.material.depthTest = false;
+				plane.material.depthWrite = false;
+				plane.material.needsUpdate = true;
+				// Create a scene and a camera to draw the video.
+
+				videoScene.add(videoCamera);
+				videoScene.add(plane);
+				// scene.add(camera);
+				// scene.add(markerRoot);
+
+
+				// Create a marker root object to keep track of the marker.
+				//
+
+
+				// Make the marker root matrix manually managed.
+				//
+
+				// Add a getMarker event listener that keeps track of barcode marker with id 20.
+				//
+				arController.addEventListener('getMarker', function(ev) {
+
+					if(ev.data.type > 0){
+						console.log('getMarker', ev.data.marker.idMatrix);
+						if (ev.data.marker.idMatrix === 0) {
+							console.log('markerRoot');
+							// The marker was found in this video frame, make it visible.
+							markerRoot.visible = true;
+
+							// Copy the marker transformation matrix to the markerRoot matrix.
+							markerRoot.matrix.elements.set(ev.matrix);
+
+						}
+					}
+
+				});
+
+				// Add a cube to the marker root.
+				//
+
+				markerRoot.add(cube);
+
+
+
+				// Make the camera matrix manually managed.
+				//
+				camera.matrixAutoUpdate = false;
+
+				// Set the camera matrix to the AR camera matrix.
+				//
+				camera.matrix.elements.set(arController.getCameraMatrix());
+
+				// On each frame, detect markers, update their positions and
+				// render the frame on the renderer.
+				//
+				var tick = function() {
+					requestAnimationFrame(tick);
+
+					// Hide the marker, we don't know if it's visible in this frame.
+					markerRoot.visible = false;
+
+					// Process detects markers in the video frame and sends
+					// getMarker events to the event listeners.
+					arController.process(video);
+					// Render the updated scene.
+					renderer.render(videoScene, videoCamera);
+				};
+				tick();
+
+			};
+		}
+	});
+
+
+</script>
+
+</body>
+</html>

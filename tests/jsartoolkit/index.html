@@ -35,8 +35,10 @@
 
 
 <script src="../../js/jsartoolkit/artoolkit.min.js"></script>
+<script src="../../js/jsartoolkit/artoolkit.api.js"></script>
 <script src="../../js/three.js/build/three.js"></script>
 <script src="../../js/jsartoolkit/artoolkit.three.js"></script>
+
 
 <script src='../../js/three.js/build/three.stereoscopic.js'></script>
 <script src='../../js/three.js/build/three.videoTexture.js'></script>
@@ -149,8 +151,8 @@ window.ARThreeOnLoad = function() {
 	ARController.getUserMediaThreeScene({
 		maxARVideoSize: 320,
 		cameraParam: 'Data/camera_para.dat',
-		facing: 'environment',
-		facingMode: 'environment',
+		facing: { exact: 'environment' },
+		facingMode: { exact: 'environment'},
 		onSuccess: function(arScene, arController, arCamera) {
 
 			document.body.className = arController.orientation;
