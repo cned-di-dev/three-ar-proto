@@ -1155,6 +1155,7 @@
 		// if ( navigator.mediaDevices || window.MediaStreamTrack) {
 			//if (navigator.mediaDevices) {
 			console.log(navigator.mediaDevices);
+			var camId = '';
 			navigator.mediaDevices.enumerateDevices()
 			.then(function(devices) {
 			  devices.forEach(function(device) {
@@ -1164,6 +1165,7 @@
 												if(device.label.indexOf('back') > -1){
 													console.log(device.kind + ": " + device.label +
 											                " id = " + device.deviceId);
+																			camId = device.deviceId;
 												}
 					}
 
@@ -1172,7 +1174,7 @@
 			.catch(function(err) {
 			  console.log(err.name + ": " + err.message);
 			});
-				navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: 'environment'}}}).then(success, onError);
+				navigator.mediaDevices.getUserMedia({video: { sourceId: camId }}).then(success, onError);
 		// 	} else {
 		// 		MediaStreamTrack.getSources(function(sources) {
 		// 			var facingDir = mediaDevicesConstraints.facingMode;
