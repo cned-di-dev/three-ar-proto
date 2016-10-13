@@ -1107,7 +1107,7 @@
 		});
 
 		var success = function(stream) {
-			console.log(stream.getVideoTracks());
+			console.log(stream.getVideoTracks()[0].label);
 			video.addEventListener('loadedmetadata', initProgress, false);
 			video.src = window.URL.createObjectURL(stream);
 			readyToPlay = true;
@@ -1146,10 +1146,30 @@
 
 		mediaDevicesConstraints.facingMode = facing;
 
+
+		function getBackCamId(sourceInfos) {
+		  for (var i = 0; i !== sourceInfos.length; ++i) {
+		    var sourceInfo = sourceInfos[i];
+		    if(sourceInfo.kind === 'video'){
+					if(sourceInfo.label.toLowercase().indexOf('back')){
+
+					}
+				}
+		  }
+		}
+
+		if (typeof MediaStreamTrack === 'undefined') {
+		  reportFatal('This browser does not support MediaStreamTrack.\n Try Chrome Canary.');
+		} else {
+		  MediaStreamTrack.getSources(getBackCamId);
+		}
+
 		navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		var hdConstraints = {
 			audio: false,
-			video: mediaDevicesConstraints
+			video: {
+
+			}
 		};
 
 		if ( false ) {
@@ -1183,11 +1203,28 @@
 				});
 			}
 		} else {
-			if (navigator.getUserMedia) {
-				navigator.getUserMedia(hdConstraints, success, onError);
-			} else {
-				onError('navigator.getUserMedia is not supported on your browser');
-			}
+			MediaStreamTrack.getSources(function(sources) {
+				var facingDir = mediaDevicesConstraints.facingMode;
+				if (facing && facing.exact) {
+					facingDir = facing.exact;
+				}
+				for (var i=0; i<sources.length; i++) {
+					console.log(sources[i].kind, sources[i].facing);
+					if (sources[i].kind === 'video' && sources[i].facing === facingDir) {
+						hdConstraints.video.mandatory.sourceId = sources[i].id;
+						break;
+					}
+				}
+				if (facing && facing.exact && !hdConstraints.video.mandatory.sourceId) {
+					onError('Failed to get camera facing the wanted direction');
+				} else {
+					if (navigator.getUserMedia) {
+						navigator.getUserMedia(hdConstraints, success, onError);
+					} else {
+						onError('navigator.getUserMedia is not supported on your browser');
+					}
+				}
+			});
 		}
 
 		return video;
