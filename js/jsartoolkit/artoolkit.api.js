@@ -1148,9 +1148,7 @@
 		navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		var hdConstraints = {
 			audio: false,
-			video: {
-				mandatory: constraints
-		  	}
+			video: mediaDevicesConstraints
 		};
 
 		if ( false ) {
@@ -1184,7 +1182,6 @@
 				});
 			}
 		} else {
-			alert('else passed');
 			if (navigator.getUserMedia) {
 				navigator.getUserMedia(hdConstraints, success, onError);
 			} else {
