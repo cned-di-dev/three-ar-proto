@@ -1171,7 +1171,7 @@
 
 			}
 		};
-
+		var newConstraints;
 		if ( false ) {
 
 			if (navigator.mediaDevices) {
@@ -1187,7 +1187,12 @@
 					}
 					for (var i=0; i<sources.length; i++) {
 						if (sources[i].kind === 'video' && sources[i].facing === facingDir) {
-							hdConstraints.video.mandatory.sourceId = sources[i].id;
+							newConstraints = {
+								audio: false,
+								video: {
+									optional: [{sourceId: sources[i].id}]
+								}
+							}
 							break;
 						}
 					}
@@ -1195,7 +1200,7 @@
 						onError('Failed to get camera facing the wanted direction');
 					} else {
 						if (navigator.getUserMedia) {
-							navigator.getUserMedia(hdConstraints, success, onError);
+							navigator.getUserMedia(newConstraints, success, onError);
 						} else {
 							onError('navigator.getUserMedia is not supported on your browser');
 						}
@@ -1210,6 +1215,10 @@
 				}
 				for (var i=0; i<sources.length; i++) {
 					console.log(hdConstraints);
+					hdConstraints = {
+						audio: false,
+
+					}
 					console.log(sources[i].kind, sources[i].facing);
 					if (sources[i].kind === 'video' && sources[i].facing === facingDir) {
 						hdConstraints.video.mandatory.sourceId = sources[i].id;
