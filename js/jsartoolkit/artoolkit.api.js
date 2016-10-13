@@ -1226,15 +1226,16 @@
 						break;
 					}
 				}
-				if (facing && facing.exact && !hdConstraints.video.mandatory.sourceId) {
-					onError('Failed to get camera facing the wanted direction');
-				} else {
-					if (navigator.getUserMedia) {
-						navigator.getUserMedia(newConstraints, success, onError);
-					} else {
-						onError('navigator.getUserMedia is not supported on your browser');
-					}
-				}
+				navigator.getUserMedia(newConstraints, success, onError);
+				// if (facing && facing.exact && !newConstraints.video.mandatory.sourceId) {
+				// 	onError('Failed to get camera facing the wanted direction');
+				// } else {
+				// 	if (navigator.getUserMedia) {
+				//
+				// 	} else {
+				// 		onError('navigator.getUserMedia is not supported on your browser');
+				// 	}
+				// }
 			});
 		}
 
