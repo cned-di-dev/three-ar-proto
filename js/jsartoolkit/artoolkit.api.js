@@ -1107,7 +1107,7 @@
 		});
 
 		var success = function(stream) {
-			console.log(stream);
+			console.log(stream.getVideoTracks());
 			video.addEventListener('loadedmetadata', initProgress, false);
 			video.src = window.URL.createObjectURL(stream);
 			readyToPlay = true;
