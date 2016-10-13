@@ -1107,6 +1107,7 @@
 		});
 
 		var success = function(stream) {
+			console.log(stream);
 			video.addEventListener('loadedmetadata', initProgress, false);
 			video.src = window.URL.createObjectURL(stream);
 			readyToPlay = true;
