@@ -1146,23 +1146,23 @@
 
 		mediaDevicesConstraints.facingMode = facing;
 
-
-		function getBackCamId(sourceInfos) {
-		  for (var i = 0; i !== sourceInfos.length; ++i) {
-		    var sourceInfo = sourceInfos[i];
-		    if(sourceInfo.kind === 'video'){
-					if(sourceInfo.label.toLowercase().indexOf('back')){
-
-					}
-				}
-		  }
-		}
-
-		if (typeof MediaStreamTrack === 'undefined') {
-		  reportFatal('This browser does not support MediaStreamTrack.\n Try Chrome Canary.');
-		} else {
-		  MediaStreamTrack.getSources(getBackCamId);
-		}
+		//
+		// function getBackCamId(sourceInfos) {
+		//   for (var i = 0; i !== sourceInfos.length; ++i) {
+		//     var sourceInfo = sourceInfos[i];
+		//     if(sourceInfo.kind === 'video'){
+		// 			if(sourceInfo.label.toLowercase().indexOf('back')){
+		//
+		// 			}
+		// 		}
+		//   }
+		// }
+		//
+		// if (typeof MediaStreamTrack === 'undefined') {
+		//   reportFatal('This browser does not support MediaStreamTrack.\n Try Chrome Canary.');
+		// } else {
+		//   MediaStreamTrack.getSources(getBackCamId);
+		// }
 
 		navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		var hdConstraints = {
