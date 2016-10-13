@@ -1144,7 +1144,8 @@
 		}
 
 		mediaDevicesConstraints.facingMode = facing;
-		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+		navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		var hdConstraints = {
 			audio: false,
 			video: {
@@ -1154,8 +1155,6 @@
 
 		if ( false ) {
 
-		console.log(mediaDevicesContraints);
-		// if ( navigator.mediaDevices || window.MediaStreamTrack) {
 			if (navigator.mediaDevices) {
 				navigator.mediaDevices.getUserMedia({
 					audio: false,
@@ -1185,6 +1184,7 @@
 				});
 			}
 		} else {
+			alert('else passed');
 			if (navigator.getUserMedia) {
 				navigator.getUserMedia(hdConstraints, success, onError);
 			} else {
