@@ -290,15 +290,16 @@ window.ARThreeOnLoad = function() {
 			}
 
 			window.addEventListener("devicemotion", function (event) {
-				var x = event.accelerationIncludingGravity.x;
-				var y = event.accelerationIncludingGravity.y;
-				var z = event.accelerationIncludingGravity.z;
-				console.log('motion detected');
+
 				if(marker1.visible){
-					videoStatus.currentVideoEl.play();
+					if(videoStatus.currentVideoEl.paused){
+						$(document).trigger('touchstart');
+					}
 				}
 				else {
-					videoStatus.currentVideoEl.pause();
+					if(!videoStatus.currentVideoEl.paused){
+						$(document).trigger('touchstart');
+					}
 				}
 
 			}, true);
