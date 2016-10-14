@@ -284,21 +284,24 @@ window.ARThreeOnLoad = function() {
 
 			function handleMotionEvent(event) {
 
-			    var x = event.accelerationIncludingGravity.x;
-			    var y = event.accelerationIncludingGravity.y;
-			    var z = event.accelerationIncludingGravity.z;
-					console.log('motion detected');
-					if(marker1.visible){
-						videoStatus.currentVideoEl.play();
-					}
-					else {
-						videoStatus.currentVideoEl.pause();
-					}
+
 
 
 			}
 
-			window.addEventListener("devicemotion", handleMotionEvent, true);
+			window.addEventListener("devicemotion", function (event) {
+				var x = event.accelerationIncludingGravity.x;
+				var y = event.accelerationIncludingGravity.y;
+				var z = event.accelerationIncludingGravity.z;
+				console.log('motion detected');
+				if(marker1.visible){
+					videoStatus.currentVideoEl.play();
+				}
+				else {
+					videoStatus.currentVideoEl.pause();
+				}
+
+			}, true);
 			arController.addEventListener('getMarker', function (e) {
 					var marker = e.data.marker.idMatrix;
 					if(e.data.type > -1 && marker >-1){
