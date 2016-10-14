@@ -1108,7 +1108,16 @@
 					video.play();
 					if (!video.paused) {
 						eventNames.forEach(function(eventName) {
-							window.removeEventListener(eventName, play, true);
+							window.removeEventListener(eventName, function(ev) {
+								if (readyToPlay) {
+									video.play();
+									if (!video.paused) {
+										eventNames.forEach(function(eventName) {
+											window.removeEventListener(eventName, play, true);
+										});
+									}
+								}
+							}, true);
 						});
 					}
 				}
