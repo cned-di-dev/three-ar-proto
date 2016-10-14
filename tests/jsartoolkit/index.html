@@ -214,7 +214,7 @@ window.ARThreeOnLoad = function() {
 	    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
 	    //
 	    //
-			var touchEvent = document.createEvent('TouchEvent');
+			var touchEvent = window.createEvent('TouchEvent');
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
@@ -365,6 +365,7 @@ window.ARThreeOnLoad = function() {
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
 						touchEvent.initTouchEvent();
 		        videoStatus.currentVideoEl.src = videoSrc;
+						console.log(videoStatus.currentVideoEl.src);
 						touchEvent.initTouchEvent();
 		      }
 				}
