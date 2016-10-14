@@ -146,7 +146,6 @@ Array.prototype.equals = function (array) {
 Object.defineProperty(Array.prototype, "equals", {
 	enumerable: false
 });
-var touchEvent = document.createEvent('TouchEvent');
 window.ARThreeOnLoad = function() {
 
 	ARController.getUserMediaThreeScene({
@@ -333,15 +332,7 @@ window.ARThreeOnLoad = function() {
 			// 	tick();
 			//
 			// });
-			document.addEventListener('touchStart', function (e) {
-				var paused = videoStatus.currentVideoEl.paused;
-				if(paused){
-					videoStatus.currentVideoEl.play();
-				}
-				else {
-					videoStatus.currentVideoEl.pause();
-				}
-			});
+
 			arController.addEventListener('getMarker', function (e) {
 					var marker = e.data.marker.idMatrix;
 					if(e.data.type > -1 && marker >-1){
@@ -354,9 +345,11 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-		        touchEvent.initTouchEvent();
+		        videoStatus.currentVideoEl.pause();
+						console.log(videoSrc);
 		        videoStatus.currentVideoEl.src = videoSrc;
-						touchEvent.initTouchEvent();
+						console.log(videoStatus.currentVideoEl.src);
+		        videoStatus.currentVideoEl.play();
 		      }
 				}
 				else {

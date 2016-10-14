@@ -1103,7 +1103,16 @@
 			}
 		};
 		eventNames.forEach(function(eventName) {
-			window.addEventListener(eventName, play, true);
+			window.addEventListener(eventName, function(ev) {
+				if (readyToPlay) {
+					video.play();
+					if (!video.paused) {
+						eventNames.forEach(function(eventName) {
+							window.removeEventListener(eventName, play, true);
+						});
+					}
+				}
+			}, true);
 		});
 
 		var success = function(stream) {
@@ -1208,7 +1217,7 @@
 					}
 				}
 				navigator.getUserMedia(newConstraints, success, onError);
-			
+
 			});
 		}
 
