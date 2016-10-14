@@ -33,7 +33,7 @@
 </head>
 <body>
 
-
+<script src='../../js/jquery/jquery-3.1.1.min.js'></script>
 <script src="../../js/jsartoolkit/artoolkit.min.js"></script>
 <script src="../../js/jsartoolkit/artoolkit.api.js"></script>
 <script src="../../js/three.js/build/three.js"></script>
@@ -214,14 +214,14 @@ window.ARThreeOnLoad = function() {
 	    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
 	    //
 	    //
-			var touchEvent = document.createEvent('TouchEvent');
+
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
-				document.addEventListener('touchstart', function (e) {
+				$(window).on('touchstart', function (e) {
 					console.log('touched');
 					var paused = videoStatus.currentVideoEl.paused;
 					if(paused){
@@ -281,7 +281,7 @@ window.ARThreeOnLoad = function() {
 				checkMarkerVisible();
 
 			}
-			
+
 
 			arController.addEventListener('getMarker', function (e) {
 					var marker = e.data.marker.idMatrix;
@@ -295,10 +295,10 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-						touchEvent.initTouchEvent();
+						$(window).trigger('touchstart');
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
-						touchEvent.initTouchEvent();
+						$(window).trigger('touchstart');
 		      }
 				}
 
