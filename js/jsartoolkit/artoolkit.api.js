@@ -1113,7 +1113,7 @@
 									video.play();
 									if (!video.paused) {
 										eventNames.forEach(function(eventName) {
-											window.removeEventListener(eventName, play, true);
+											window.removeEventListener(eventName, '', true);
 										});
 									}
 								}

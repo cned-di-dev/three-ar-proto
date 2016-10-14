@@ -345,16 +345,11 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-		        videoStatus.currentVideoEl.pause();
-						console.log(videoSrc);
+
 		        videoStatus.currentVideoEl.src = videoSrc;
-						console.log(videoStatus.currentVideoEl.src);
-		        videoStatus.currentVideoEl.play();
 		      }
 				}
-				else {
-					videoStatus.currentVideoEl.pause();
-				}
+			
 
 	    }
 			function onVideoEnded() {
