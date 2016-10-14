@@ -33,8 +33,7 @@
 </head>
 <body>
 
-<button type="button" id="playButton">play video</button>
-<button type="button" id="pauseButton">pause video</button>
+<button type="button" id="launch-btn">Lancer l'app</button>
 
 <script src='../../js/jquery/jquery-3.1.1.min.js'></script>
 <script src="../../js/jsartoolkit/artoolkit.min.js"></script>
@@ -187,8 +186,7 @@ window.ARThreeOnLoad = function() {
 			var marker2 = new RAMarker(1);
 			var geometry = new THREE.PlaneGeometry(2.72, 1.53); //16:9
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
-			var playButton = document.getElementById('playButton');
-			var pauseButton = document.getElementById('pauseButton');
+			var lauchBtn = document.getElementById('launch-btn');
 			var cube = new THREE.Mesh(
 				geometry,
 				movieMaterial
@@ -224,12 +222,7 @@ window.ARThreeOnLoad = function() {
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
-				playButton.addEventListener('click', function () {
-					videoStatus.currentVideoEl.play();
-				});
-				pauseButton.addEventListener('click', function () {
-					videoStatus.currentVideoEl.pause();
-				});
+
 	    }
 
 			function handleNewMarker (newMarker) {
@@ -302,10 +295,10 @@ window.ARThreeOnLoad = function() {
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
 
-						pauseButton.click();
+						videoStatus.currentVideoEl.pause();
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
-						playButton.click();
+						videoStatus.currentVideoEl.play();
 		      }
 				}
 
@@ -502,10 +495,12 @@ window.ARThreeOnLoad = function() {
 	delete window.ARThreeOnLoad;
 
 };
+lauchBtn.addEventListener('click', function () {
+	if (window.ARController && ARController.getUserMediaThreeScene) {
+		ARThreeOnLoad();
+	}
+});
 
-if (window.ARController && ARController.getUserMediaThreeScene) {
-	ARThreeOnLoad();
-}
 </script>
 
 </body>
