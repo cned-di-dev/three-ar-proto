@@ -148,6 +148,9 @@ Array.prototype.equals = function (array) {
 Object.defineProperty(Array.prototype, "equals", {
 	enumerable: false
 });
+
+var launchBtn = document.getElementById('launch-btn');
+
 window.ARThreeOnLoad = function() {
 
 	ARController.getUserMediaThreeScene({
@@ -186,7 +189,7 @@ window.ARThreeOnLoad = function() {
 			var marker2 = new RAMarker(1);
 			var geometry = new THREE.PlaneGeometry(2.72, 1.53); //16:9
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
-			var lauchBtn = document.getElementById('launch-btn');
+
 			var cube = new THREE.Mesh(
 				geometry,
 				movieMaterial
