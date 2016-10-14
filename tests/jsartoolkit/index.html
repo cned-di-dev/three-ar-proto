@@ -33,6 +33,9 @@
 </head>
 <body>
 
+<button type="button" id="playVideo">play video</button>
+<button type="button" id="playVideo">pause video</button>
+
 <script src='../../js/jquery/jquery-3.1.1.min.js'></script>
 <script src="../../js/jsartoolkit/artoolkit.min.js"></script>
 <script src="../../js/jsartoolkit/artoolkit.api.js"></script>
@@ -184,7 +187,8 @@ window.ARThreeOnLoad = function() {
 			var marker2 = new RAMarker(1);
 			var geometry = new THREE.PlaneGeometry(2.72, 1.53); //16:9
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
-
+			var playButton = document.getElementById('playButton');
+			var pauseButton = document.getElementById('pauseButton');
 			var cube = new THREE.Mesh(
 				geometry,
 				movieMaterial
@@ -214,22 +218,17 @@ window.ARThreeOnLoad = function() {
 	    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
 	    //
 	    //
-			var touchEvent = document.createEvent('UIEvent');
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
-				$(document).on('touchstart', function (e) {
-					console.log('touched');
-					var paused = videoStatus.currentVideoEl.paused;
-					if(paused){
-						videoStatus.currentVideoEl.play();
-					}
-					else {
-						videoStatus.currentVideoEl.pause();
-					}
+				playButton.addEventListener('click', function () {
+					videoStatus.currentVideoEl.play();
+				});
+				pauseButton.addEventListener('click', function () {
+					videoStatus.currentVideoEl.pause();
 				});
 	    }
 
@@ -289,20 +288,7 @@ window.ARThreeOnLoad = function() {
 
 			}
 
-			window.addEventListener("devicemotion", function (event) {
 
-				if(marker1.visible){
-					if(videoStatus.currentVideoEl.paused){
-						$(document).trigger('touchstart');
-					}
-				}
-				else {
-					if(!videoStatus.currentVideoEl.paused){
-						$(document).trigger('touchstart');
-					}
-				}
-
-			}, true);
 			arController.addEventListener('getMarker', function (e) {
 					var marker = e.data.marker.idMatrix;
 					if(e.data.type > -1 && marker >-1){
@@ -316,9 +302,10 @@ window.ARThreeOnLoad = function() {
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
 
-
+						pauseButton.click();
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
+						playButton.click();
 		      }
 				}
 
