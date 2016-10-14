@@ -282,7 +282,23 @@ window.ARThreeOnLoad = function() {
 
 			}
 
+			function handleMotionEvent(event) {
 
+			    var x = event.accelerationIncludingGravity.x;
+			    var y = event.accelerationIncludingGravity.y;
+			    var z = event.accelerationIncludingGravity.z;
+					console.log('motion detected');
+					if(marker1.visible){
+						videoStatus.currentVideoEl.play();
+					}
+					else {
+						videoStatus.currentVideoEl.pause();
+					}
+
+
+			}
+
+			window.addEventListener("devicemotion", handleMotionEvent, true);
 			arController.addEventListener('getMarker', function (e) {
 					var marker = e.data.marker.idMatrix;
 					if(e.data.type > -1 && marker >-1){
@@ -295,10 +311,10 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-						$(document).trigger('touchstart');
+
+
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
-						$(document).trigger('touchstart');
 		      }
 				}
 
