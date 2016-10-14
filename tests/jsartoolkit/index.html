@@ -214,14 +214,14 @@ window.ARThreeOnLoad = function() {
 	    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
 	    //
 	    //
-
+			var touchEvent = document.createEvent('UIEvent');
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
-				$(window).on('touchstart', function (e) {
+				document.addEventListener('touchstart', function (e) {
 					console.log('touched');
 					var paused = videoStatus.currentVideoEl.paused;
 					if(paused){
@@ -295,10 +295,10 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-						$(window).trigger('touchstart');
+						touchEvent.initUIEvent();
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
-						$(window).trigger('touchstart');
+						touchEvent.initUIEvent();
 		      }
 				}
 
