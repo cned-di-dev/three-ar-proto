@@ -214,28 +214,23 @@ window.ARThreeOnLoad = function() {
 	    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
 	    //
 	    //
-			var touchEvent = document.createEvent('TouchEvent');
-			touchEvent.touches = touchEvent.createTouchList(
-			    touchEvent.createTouch(window, '', 0, 0, 0, 0, 0)
-			);
-
-			document.addEventListener('touchstart', function (e) {
-				console.log('touched');
-				var paused = videoStatus.currentVideoEl.paused;
-				if(paused){
-					videoStatus.currentVideoEl.play();
-				}
-				else {
-					videoStatus.currentVideoEl.pause();
-				}
-			});
+			var touchEvent = document.createEvent('UIEvent');
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
-
+				$(document).on('touchstart', function (e) {
+					console.log('touched');
+					var paused = videoStatus.currentVideoEl.paused;
+					if(paused){
+						videoStatus.currentVideoEl.play();
+					}
+					else {
+						videoStatus.currentVideoEl.pause();
+					}
+				});
 	    }
 
 			function handleNewMarker (newMarker) {
@@ -300,10 +295,10 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-						touchEvent.initTouchEvent();
+						$(document).trigger('touchstart');
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
-						touchEvent.initTouchEvent();
+						$(document).trigger('touchstart');
 		      }
 				}
 
