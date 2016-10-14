@@ -215,7 +215,9 @@ window.ARThreeOnLoad = function() {
 	    //
 	    //
 			var touchEvent = document.createEvent('TouchEvent');
-			touchEvent.touches = [{pageX: pageX, pageY: pageY}];
+			touchEvent.touches = e.createTouchList(
+			    e.createTouch(window, '', 0, 0, 0, 0, 0)
+			);
 
 			document.addEventListener('touchstart', function (e) {
 				console.log('touched');
