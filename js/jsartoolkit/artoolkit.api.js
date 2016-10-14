@@ -1103,25 +1103,7 @@
 			}
 		};
 		eventNames.forEach(function(eventName) {
-			window.addEventListener(eventName, function(ev) {
-				if (readyToPlay) {
-					video.play();
-					if (!video.paused) {
-						eventNames.forEach(function(eventName) {
-							window.removeEventListener(eventName, function(ev) {
-								if (readyToPlay) {
-									video.play();
-									if (!video.paused) {
-										eventNames.forEach(function(eventName) {
-											window.removeEventListener(eventName, '', true);
-										});
-									}
-								}
-							}, true);
-						});
-					}
-				}
-			}, true);
+			window.addEventListener(eventName, play, true);
 		});
 
 		var success = function(stream) {

@@ -197,6 +197,12 @@ window.ARThreeOnLoad = function() {
 			markerRoot.add(cube);
 			arScene.scene.add(markerRoot);
 
+			var readyToPlay = false;
+			var eventNames = [
+				'touchstart', 'touchend', 'touchmove', 'touchcancel',
+				'click', 'mousedown', 'mouseup', 'mousemove',
+				'keydown', 'keyup', 'keypress', 'scroll'
+			];
 			var firstFrame = 0,
 	      videoEnded = 0,
 	      firstMarker = 0;
@@ -208,11 +214,23 @@ window.ARThreeOnLoad = function() {
 	    // utilisée uniquement pour mettre à jour le positionnement de la projection contenant la vidéo
 	    //
 	    //
+			var touchEvent = document.createEvent('TouchEvent');
+
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
+				document.addEventListener('touchstart', function (e) {
+					console.log('touched');
+					var paused = videoStatus.currentVideoEl.paused;
+					if(paused){
+						videoStatus.currentVideoEl.play();
+					}
+					else {
+						videoStatus.currentVideoEl.pause();
+					}
+				});
 	    }
 
 			function handleNewMarker (newMarker) {
@@ -345,11 +363,12 @@ window.ARThreeOnLoad = function() {
 	      // on ne met à jour que si la nouvelle source est différente de l'ancienne
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
-
+						touchEvent.initTouchEvent();
 		        videoStatus.currentVideoEl.src = videoSrc;
+						touchEvent.initTouchEvent();
 		      }
 				}
-			
+
 
 	    }
 			function onVideoEnded() {
