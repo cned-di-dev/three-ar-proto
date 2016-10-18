@@ -1190,7 +1190,10 @@
 			}
 		} else {
 			MediaStreamTrack.getSources(function(sources) {
-				var newConstraints;
+				var newConstraints = {
+					audio: false,
+					video: true
+				};
 				var facingDir = mediaDevicesConstraints.facingMode;
 				if (facing && facing.exact) {
 					facingDir = facing.exact;
@@ -1207,6 +1210,7 @@
 						break;
 					}
 				}
+
 				navigator.getUserMedia(newConstraints, success, onError);
 
 			});
