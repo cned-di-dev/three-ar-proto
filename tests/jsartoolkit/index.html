@@ -235,12 +235,11 @@ window.ARThreeOnLoad = function() {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
 				videoStatus.currentVideoEl.addEventListener('click',function(){
-					var self = videoStatus.currentVideoEl;
-					if(!self.paused){
-						self.setAttribute("autoplay", false);
+					if(!videoStatus.currentVideoEl.paused){
+						videoStatus.currentVideoEl.pause();
 					}
 					else {
-						self.setAttribute("autoplay", "autplay");
+						videoStatus.currentVideoEl.play();
 					}
 
 				},false);
