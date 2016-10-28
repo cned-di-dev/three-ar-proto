@@ -85,6 +85,8 @@ var videoSrcList = [
 ChromaKeyMaterial = function (url, width, height, keyColor) {
 	THREE.ShaderMaterial.call(this);
 	video = document.createElement('video');
+	video.muted = true;
+	video.autoplay = true;
 	video.loop = false;
 	video.src = url;
 	video.load();
@@ -231,6 +233,10 @@ window.ARThreeOnLoad = function() {
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
+				console.log(videoStatus.currentVideoEl);
+				videoStatus.currentVideoEl.muted = true;
+				videoStatus.currentVideoEl.autoplay = true;
+
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
