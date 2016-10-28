@@ -85,8 +85,6 @@ var videoSrcList = [
 ChromaKeyMaterial = function (url, width, height, keyColor) {
 	THREE.ShaderMaterial.call(this);
 	video = document.createElement('video');
-	video.muted = true;
-	video.autoplay = true;
 	video.loop = false;
 	video.src = url;
 	video.load();
@@ -233,22 +231,10 @@ window.ARThreeOnLoad = function() {
 
 	    function initVideo(video) {
 	      videoStatus.currentVideoEl = video;
-				console.log(videoStatus.currentVideoEl);
-				videoStatus.currentVideoEl.muted = true;
-				//videoStatus.currentVideoEl.autoplay = true;
-
 	      videoStatus.currentVideoEl.addEventListener('ended', function () {
 	        onVideoEnded(videoStatus.currentVideoEl);
 	      });
-				videoStatus.currentVideoEl.addEventListener('click',function(){
-					if(!videoStatus.currentVideoEl.paused){
-						videoStatus.currentVideoEl.pause();
-					}
-					else {
-						videoStatus.currentVideoEl.play();
-					}
 
-				},false);
 	    }
 
 			function handleNewMarker (newMarker) {
@@ -314,15 +300,6 @@ window.ARThreeOnLoad = function() {
 						handleNewMarker(marker);
 					}
 				});
-			function eventFire(el, etype){
-			  if (el.fireEvent) {
-			    el.fireEvent('on' + etype);
-			  } else {
-			    var evObj = document.createEvent('Events');
-			    evObj.initEvent(etype, true, false);
-			    el.dispatchEvent(evObj);
-			  }
-			}
 			function updateVideo(videoSrc) {
 				console.log('updating video');
 
@@ -330,26 +307,25 @@ window.ARThreeOnLoad = function() {
 				if(typeof videoSrc !== 'undefined'){
 		      if (videoSrc !== videoStatus.currentVideoEl.src) {
 
-						eventFire(videoStatus.currentVideoEl, 'click');
-
+						videoStatus.currentVideoEl.pause();
 		        videoStatus.currentVideoEl.src = videoSrc;
 						console.log(videoStatus.currentVideoEl.src);
-						eventFire(videoStatus.currentVideoEl, 'click');
+						videoStatus.currentVideoEl.play();
 		      }
 				}
 				else {
-					eventFire(videoStatus.currentVideoEl, 'click');
+					videoStatus.currentVideoEl.pause();
 					videoStatus.currentVideoEl.src = videoSrcList[0];
 				}
 
 
 	    }
 			function onVideoEnded() {
-	      eventFire(videoStatus.currentVideoEl, 'click');
+	      videoStatus.currentVideoEl.pause();
 
 	      setTimeout(function () {
 	        videoStatus.currentVideoEl.currentTime = 0;
-	        eventFire(videoStatus.currentVideoEl, 'click');
+	        videoStatus.currentVideoEl.play();
 	      }, 5000);
 	    }
 
