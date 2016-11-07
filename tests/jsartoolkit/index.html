@@ -196,6 +196,11 @@ window.ARThreeOnLoad = function() {
 			};
 			var marker1 = new RAMarker(0);
 			var marker2 = new RAMarker(1);
+			var marker3 = new RAMarker(2);
+			var marker4 = new RAMarker(3);
+			var marker5 = new RAMarker(4);
+			var marker6 = new RAMarker(5);
+			var marker7 = new RAMarker(6);
 			var geometry = new THREE.PlaneGeometry(2.72, 1.53); //16:9
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
 
@@ -261,7 +266,56 @@ window.ARThreeOnLoad = function() {
 					}
 					marker2.ts = ts;
 				}
-
+				if(newMarker === 2){
+					if(marker3.visible === false){
+						marker3.visible = true;
+						if(marker1.visible){
+							updateVideo(marker3.videoSrc);
+						}
+						console.log('changed marker2.visible to true');
+					}
+					marker3.ts = ts;
+				}
+				if(newMarker === 3){
+					if(marker4.visible === false){
+						marker4.visible = true;
+						if(marker1.visible){
+							updateVideo(marker4.videoSrc);
+						}
+						console.log('changed marker4.visible to true');
+					}
+					marker4.ts = ts;
+				}
+				if(newMarker === 4){
+					if(marker5.visible === false){
+						marker5.visible = true;
+						if(marker1.visible){
+							updateVideo(marker5.videoSrc);
+						}
+						console.log('changed marker5.visible to true');
+					}
+					marker5.ts = ts;
+				}
+				if(newMarker === 5){
+					if(marker6.visible === false){
+						marker6.visible = true;
+						if(marker1.visible){
+							updateVideo(marker6.videoSrc);
+						}
+						console.log('changed marker6.visible to true');
+					}
+					marker6.ts = ts;
+				}
+				if(newMarker === 6){
+					if(marker7.visible === false){
+						marker7.visible = true;
+						if(marker1.visible){
+							updateVideo(marker7.videoSrc);
+						}
+						console.log('changed marker7.visible to true');
+					}
+					marker7.ts = ts;
+				}
 
 
 
@@ -277,6 +331,31 @@ window.ARThreeOnLoad = function() {
 					marker2.visible = false;
 					updateVideo(marker1.videoSrc);
 					console.log('changed marker2.visible to false');
+				}
+				if(marker3.ts < ts - checkDuration && marker3.visible){
+					marker3.visible = false;
+					updateVideo(marker1.videoSrc);
+					console.log('changed marker3.visible to false');
+				}
+				if(marker4.ts < ts - checkDuration && marker4.visible){
+					marker4.visible = false;
+					updateVideo(marker1.videoSrc);
+					console.log('changed marker4.visible to false');
+				}
+				if(marker5.ts < ts - checkDuration && marker5.visible){
+					marker5.visible = false;
+					updateVideo(marker1.videoSrc);
+					console.log('changed marker5.visible to false');
+				}
+				if(marker6.ts < ts - checkDuration && marker6.visible){
+					marker6.visible = false;
+					updateVideo(marker1.videoSrc);
+					console.log('changed marker6.visible to false');
+				}
+				if(marker7.ts < ts - checkDuration && marker7.visible){
+					marker7.visible = false;
+					updateVideo(marker1.videoSrc);
+					console.log('changed marker7.visible to false');
 				}
 			}
 
