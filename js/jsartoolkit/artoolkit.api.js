@@ -1166,6 +1166,7 @@
 					if (facing && facing.exact) {
 						facingDir = facing.exact;
 					}
+
 					for (var i=0; i<sources.length; i++) {
 						if (sources[i].kind === 'video' && sources[i].facing === facingDir) {
 							newConstraints = {
@@ -1199,8 +1200,8 @@
 					facingDir = facing.exact;
 				}
 				for (var i=0; i<sources.length; i++) {
-
 					if (sources[i].kind === 'video' && sources[i].facing === facingDir) {
+
 						newConstraints = {
 							audio: false,
 							video: {
@@ -1210,7 +1211,6 @@
 						break;
 					}
 				}
-
 				navigator.getUserMedia(newConstraints, success, onError);
 
 			});
