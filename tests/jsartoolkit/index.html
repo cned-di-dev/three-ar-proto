@@ -201,7 +201,7 @@ window.ARThreeOnLoad = function() {
 			var marker5 = new RAMarker(4);
 			var marker6 = new RAMarker(5);
 			var marker7 = new RAMarker(6);
-			var geometry = new THREE.PlaneGeometry(3.28, 2.46); // 4:3
+			var geometry = new THREE.PlaneGeometry(4.8, 3.6); // 4:3
 			var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff)
 
 			var cube = new THREE.Mesh(
@@ -210,8 +210,8 @@ window.ARThreeOnLoad = function() {
 			);
 			cube.material.shading = THREE.FlatShading;
 			cube.position.z = 0;
-			cube.position.x = 2.2;
-			cube.position.y = -1;
+			cube.position.x = 3.2;
+			cube.position.y = -1.2;
 			var markerRoot = arController.createThreeBarcodeMarker(0);
 			markerRoot.add(cube);
 			arScene.scene.add(markerRoot);
