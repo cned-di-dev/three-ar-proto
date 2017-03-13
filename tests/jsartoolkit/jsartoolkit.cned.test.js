@@ -153,6 +153,7 @@ window.ARThreeOnLoad = function() {
 
 
                 } else if (newMarker > 0) {
+                  if(typeof markers['marker-' + newMarker] != 'undefined'){
                     if (markers['marker-' + newMarker].visible === false) {
                         markers['marker-' + newMarker].visible = true;
                         if (markers['marker-1'].visible) {
@@ -161,6 +162,8 @@ window.ARThreeOnLoad = function() {
                         console.info('Changed marker-' + newMarker + '.visible to true');
                     }
                     markers['marker-' + newMarker].ts = ts;
+                  }
+
                 }
 
 
