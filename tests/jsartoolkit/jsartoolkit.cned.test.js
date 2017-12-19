@@ -26,7 +26,7 @@ ChromaKeyMaterial = function(url, width, height, keyColor) {
     video.load();
 
     var videoImage = document.createElement('canvas');
-    if (window.webkitURL){
+    if (window.URL){
 			document.body.appendChild(videoImage);
 		}
     videoImage.width = width;

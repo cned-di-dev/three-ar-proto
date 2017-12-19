@@ -1161,7 +1161,7 @@
 					video: mediaDevicesConstraints
 				}).then(success, onError);
 			} else {
-				MediaStreamTrack.getSources(function(sources) {
+				navigator.mediaDevices.enumerateDevices().then (function(sources) {
 					var facingDir = mediaDevicesConstraints.facingMode;
 					if (facing && facing.exact) {
 						facingDir = facing.exact;
@@ -1190,27 +1190,33 @@
 				});
 			}
 		} else {
-			MediaStreamTrack.getSources(function(sources) {
+			navigator.mediaDevices.enumerateDevices().then (function(sources) {
 				var newConstraints = {
 					audio: false,
-					video: true
+					video: true,
+					facingMode: { exact: "environment" },
 				};
 				var facingDir = mediaDevicesConstraints.facingMode;
 				if (facing && facing.exact) {
 					facingDir = facing.exact;
 				}
 				for (var i=0; i<sources.length; i++) {
-					if (sources[i].kind === 'video' && sources[i].facing === facingDir) {
-
+					if(sources[i].kind === 'videoinput'){
+						alert('Cam trouvée ====> ', sources[i]);
+					}
+					if (sources[i].kind === 'videoinput' && sources[i].label.indexOf('facing back') > -1) {
+						alert('MATCH ====> ', sources[i]);
 						newConstraints = {
 							audio: false,
 							video: {
-								optional: [{sourceId: sources[i].id}]
+								optional: [{sourceId: sources[i].deviceId}]
 							}
-						}
+						};
+						
 						break;
 					}
 				}
+				console.log(newConstraints);
 				navigator.getUserMedia(newConstraints, success, onError);
 
 			});
