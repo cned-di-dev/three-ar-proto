@@ -207,7 +207,7 @@ window.ARThreeOnLoad = function() {
                 // on ne met à jour que si la nouvelle source est différente de l'ancienne
                 if (typeof videoSrc !== 'undefined') {
                     if (videoSrc !== currentVideoEl.src) {
-
+                        currentVideoEl.pause();
                         currentVideoEl.src = videoSrc;
                         console.info('Updating video src : ' + currentVideoEl.src);
                         setTimeout(function (){
