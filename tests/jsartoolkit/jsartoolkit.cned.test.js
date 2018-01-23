@@ -113,7 +113,7 @@ window.ARThreeOnLoad = function() {
                 markers['marker-' + i] = new RAMarker(i);
             }
 
-            var geometry = new THREE.PlaneGeometry(4.3, 3.3); // 4:3
+            var geometry = new THREE.PlaneGeometry(16, 9); // 4:3
             var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff);
             var cube = new THREE.Mesh(
                 geometry,
@@ -207,9 +207,9 @@ window.ARThreeOnLoad = function() {
                 // on ne met à jour que si la nouvelle source est différente de l'ancienne
                 if (typeof videoSrc !== 'undefined') {
                     if (videoSrc !== currentVideoEl.src) {
+
                         currentVideoEl.pause();
                         currentVideoEl.src = videoSrc;
-                        console.info('Updating video src : ' + currentVideoEl.src);
                         setTimeout(function (){
                             currentVideoEl.play();
                         }, 150);
