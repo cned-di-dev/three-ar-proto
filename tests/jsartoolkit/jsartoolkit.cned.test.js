@@ -210,11 +210,10 @@ window.ARThreeOnLoad = function() {
 
                         currentVideoEl.src = videoSrc;
                         console.info('Updating video src : ' + currentVideoEl.src);
-                        var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
-
-                        if (!isPlaying) {
-                            video.play();
-                        }
+                        setTimeout(function (){
+                            currentVideoEl.play();
+                        }, 150);
+                        
                     }
                 } else {
                     currentVideoEl.pause();
