@@ -113,7 +113,7 @@ window.ARThreeOnLoad = function() {
                 markers['marker-' + i] = new RAMarker(i);
             }
 
-            var geometry = new THREE.PlaneGeometry(16, 9); // 4:3
+            var geometry = new THREE.PlaneGeometry(5.5, 3.3); // 4:3
             var movieMaterial = new ChromaKeyMaterial(videoSrcList[0], 1280, 720, 0xffffff);
             var cube = new THREE.Mesh(
                 geometry,
