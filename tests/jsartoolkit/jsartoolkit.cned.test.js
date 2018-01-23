@@ -210,9 +210,14 @@ window.ARThreeOnLoad = function() {
 
                         currentVideoEl.src = videoSrc;
                         console.info('Updating video src : ' + currentVideoEl.src);
-                        currentVideoEl.play();
+                        var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+
+                        if (!isPlaying) {
+                            video.play();
+                        }
                     }
                 } else {
+                    currentVideoEl.pause();
                     currentVideoEl.src = videoSrcList[0];
                 }
 
