@@ -121,7 +121,7 @@ window.ARThreeOnLoad = function() {
             );
             cube.material.shading = THREE.FlatShading;
             cube.position.z = 0;
-            cube.position.x = 2.8;
+            cube.position.x = 3.2;
             cube.position.y = -1;
             var markerRoot = arController.createThreeBarcodeMarker(0);
             markerRoot.add(cube);
