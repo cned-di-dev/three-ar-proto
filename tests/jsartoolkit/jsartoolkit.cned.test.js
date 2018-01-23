@@ -140,7 +140,6 @@ window.ARThreeOnLoad = function() {
 
             function handleNewMarker(newMarker) {
                 var ts = Date.now();
-								console.log(newMarker);
                 if (newMarker === 0) {
                     if (markers['marker-' + newMarker].visible === false) {
                         markers['marker-' + newMarker].visible = true;
@@ -209,13 +208,11 @@ window.ARThreeOnLoad = function() {
                 if (typeof videoSrc !== 'undefined') {
                     if (videoSrc !== currentVideoEl.src) {
 
-                        currentVideoEl.pause();
                         currentVideoEl.src = videoSrc;
                         console.info('Updating video src : ' + currentVideoEl.src);
                         currentVideoEl.play();
                     }
                 } else {
-                    currentVideoEl.pause();
                     currentVideoEl.src = videoSrcList[0];
                 }
 

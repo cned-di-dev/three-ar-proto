@@ -1201,11 +1201,8 @@
 					facingDir = facing.exact;
 				}
 				for (var i=0; i<sources.length; i++) {
-					if(sources[i].kind === 'videoinput'){
-						alert('Cam trouvée ====> ', sources[i]);
-					}
+					
 					if (sources[i].kind === 'videoinput' && sources[i].label.indexOf('facing back') > -1) {
-						alert('MATCH ====> ', sources[i]);
 						newConstraints = {
 							audio: false,
 							video: {
@@ -1216,7 +1213,6 @@
 						break;
 					}
 				}
-				console.log(newConstraints);
 				navigator.getUserMedia(newConstraints, success, onError);
 
 			});
